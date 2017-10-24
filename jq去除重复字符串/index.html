@@ -1,0 +1,20 @@
+<html>
+<head>
+<script src="js/jquery.min.js"></script>
+<SCRIPT LANGUAGE="JavaScript">
+$(function(){
+ $('#delRepeat').click(function(){
+  var str = $('#repeatValue').val();
+     var reg = /(.)(?=.*\1)/g;//预搜索方式（有的叫断言）
+     var result = str.replace(reg, "");
+     $('#noRepeat').val(result);
+ })
+})
+</SCRIPT>
+</head>
+<body>
+原值<input id="repeatValue" type="text" value="aca" ><input id="delRepeat" type="button" value="去重">
+<input type="text" id="noRepeat">
+</body>
+
+</html>
