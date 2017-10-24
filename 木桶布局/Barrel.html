@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>木桶布局</title>
+    <style>
+        body,
+        div {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        #main {
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        #main div {
+            padding: 5px;
+            float: left;
+        }
+    
+        #main div img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id = "main" class="img-preview clearfix">
+
+    </div>
+     <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>  
+    
+    <script>
+        function Barrel($ct){
+            this.$ct = $ct;
+            this.imgPreviewWidth = this.$ct.width();  //main 节点的宽度 
+            this.rowFixedHeight = 200; //　固定行高  
+            this.getData();    
+        };
+
+        Barrel.prototype = {
+            getData: function(){
+                var _this = this;
+                var data = {
+                    key: "6307267-ecd68ad98ea788f84ddf8b29b",
+                    // q: "hangzhou",
+                    image_type: "photo",
+                    per_page: 20
+                };
+
+                var url = "https://pixabay.com/api/?";
+                for(var key in data){
+                    url += key + "=" + data[key] + "&";
+                }
+                url = url.slice(0, url.length-1);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('get', url, true);
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4){
+                        if(xhr.status === 200 || xhr.status === 304){
+                            var json = JSON.parse(xhr.response);
+                            _this.render(json.hits);
+                        }else{  
+                            alert('get data error');
+                        };
+                    };
+                };
+                xhr.send();
+            },
+
+            render: function(data){
+                var _this = this;
+                var rowList = [];　　　　　　// 存放一行图片的数组
+                var rowTotalWidth = 0;　　　// 一行的总宽度
+                var rowFixedHeight = this.rowFixedHeight;  // 固定一个高度
+                var imgPreviewNode = this.$ct; // img-preview的节点
+                var imgPreviewWidth = this.imgPreviewWidth;　　// main 节点的宽度
+                
+                // 遍历数据，设置每张图片的数据
+                data.forEach(function(imgInfo) {
+                    var w = imgInfo.webformatWidth;
+                    var h = imgInfo.webformatHeight;
+                    // 设置定高，获得自适应的宽度
+                    imgInfo.newHeight = rowFixedHeight;　　// 定高
+                    imgInfo.newWidth = w  *rowFixedHeight / h;　// 自适应宽度
+                    
+                    // 如果新的宽度＋行的总宽度　> main节点的总宽度 是true就是放不下　false就是放的下
+                    if( imgInfo.newWidth + rowTotalWidth > imgPreviewWidth){
+                        // 放不下的时候执行　layout 布置图片
+                        _this.layout(rowList,rowTotalWidth);
+                        
+                        // 第二行
+                        rowList = [imgInfo]; // 放不下的那张图片，从新放到数组内
+                        rowTotalWidth = imgInfo.newWidth;  // 行的总宽度也就成立新图片的宽度
+
+                    }else{ 
+                        rowList.push(imgInfo); // 放的下的数据在数据在数组内
+                        rowTotalWidth += imgInfo.newWidth;　//行的总宽度就变成到了　原来的总宽度＋新元素的宽度
+                    }
+                }, this);
+
+                _this.layout(rowList, rowTotalWidth);
+                rowList = [];
+                rowTotalWidth = 0;
+            },
+
+            layout: function(list, rowTotalWidth){
+                var imgPreviewWidth = this.imgPreviewWidth;　　// main 节点的宽度
+                var rowFixedHeight = this.rowFixedHeight;  // 固定一个宽度
+                var imgPreviewNode = this.$ct // img-preview的节点
+                console.log(imgPreviewWidth);
+
+                list.forEach(function(imgInfo){
+                    var divNode = document.createElement('div');
+                    var imgNode = document.createElement('img');
+                    imgNode.src = imgInfo.webformatURL;  // 图片地址
+                    console.log(imgNode.src);
+                    divNode.appendChild(imgNode);
+                    
+                    $(divNode).css({
+                        width: Math.floor((imgInfo.webformatWidth / imgInfo.webformatHeight) * (imgPreviewWidth / rowTotalWidth) * rowFixedHeight),
+                        height: Math.floor((imgPreviewWidth / rowTotalWidth) * rowFixedHeight) 
+                    });
+                    imgPreviewNode[0].appendChild(divNode);
+                    
+                },this);
+            },
+  
+        };
+        
+        var v = new Barrel($(".img-preview"));
+        
+    </script>
+</body>
+</html>

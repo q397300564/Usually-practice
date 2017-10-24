@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>img-懒加载</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        } 
+
+        body,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        a {
+            text-decoration: none;
+        }
+        
+        .layout {
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        .contents {
+            margin-left: -32px;
+        }
+
+        .contents li {
+            float: left;
+            margin-left: 26px;
+            padding-top: 10px;
+            width: 284px;
+            /* background: #ccc; */
+        }
+
+        .contents li img {
+            width: 284px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <ul class = "contents clearfix">
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/1.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/6.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/7.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/8.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/9.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/10.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/11.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/12.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/13.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/14.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/15.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/16.jpg" alt="图片">
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+    <script>
+        /*
+            1.对于 img 标签，把真实的地址放在自定义属性 data-img
+            2.当滚动页面时，检查所有的img标签，是否出现在视野以内，如果在视野内的话就看是否已经加载，
+            如果没有加载，就加载
+        */
+
+        // 第一步滚动页面时，判断是否在视野内，且没有加载
+        // $(window).on('scroll', function(){
+        //     $('.contents img').each(function(){
+        //         if( checkShow($(this))&& !isloaded($(this)) ){  // 判断是都在视野 且 没有加载
+        //             console.log('helle');
+        //             loadImg($(this));
+        //         };
+        //     });
+        // });
+
+        // // 判断是否在视野内的函数
+        // function checkShow($img){
+        //     var scrollTop = $(window).scrollTop();
+        //     var windowHeight = $(window).height();
+        //     var imgHeight = $img.offset().top
+        //     if(imgHeight < windowHeight && imgHeight > scrollTop){
+        //        return true; 
+        //     }
+        //     return false;
+        // }
+
+        // // 是否加载函数
+        // function isloaded($img){
+        //     return $img.attr('src') === $img.attr('data-img');
+        // }
+
+        // // 加载图片
+        // function loadImg($img){
+        //     $img.attr('src', $img.attr('data-img'));
+        // }
+
+        //优化代码
+        /*
+            1. 上面的代码在没有滑动的时候就没有图片。所以，在打开页面的时候就执行一次
+            2. 滑动的时候就后立即执行函数。需要延后0.几秒，在这几秒内不执行函数
+        */
+
+        lazyRender(); // 打开页面就执行一次懒加载
+        var clock; // 延迟时间执行声明
+        
+        // 在window上绑定一个滑动事件
+        $(window).on('scroll', function(){
+            // 在 clock 执行过了
+            if(clock){
+                clearTimeout(); // 取消先前通过调用建立的超时setTimeout()。
+            };
+            // 时间延迟执行代码     
+            clock = setTimeout(function(){ // 加载图片
+        function loadImg($img){
+            $img.attr('src', $img.attr('data-img'));
+        }
+                console.log('hello');
+                lazyRender(); // 执行懒加载函数
+            }, 300);// 延迟 0.3秒
+        });
+
+        // 懒加载函数
+        function lazyRender(){
+            // 遍历 img 执行 
+            $('.contents img').each(function(){
+                if ( checkShow($(this)) && !isloaded($(this)) ){  // 判断 是否在视野内且没有加载
+                    loadImg($(this)); // 执行加载图片
+                };
+            });
+        }
+
+        // 判断是否在视野内的函数
+        function checkShow($img){
+            var scrollTop = $(window).scrollTop(); //滑动高度
+            var windowHeight = $(window).height(); //视野高度
+            var imgHeight = $img.offset().top;   //图片在document的高度
+            if(imgHeight < windowHeight+scrollTop && imgHeight > scrollTop){  // 判断 图片位置高度 小于 视野高度 加上 滑动高度 且 图片位置高度 大于 滑动高度
+               return true; 
+            }
+            return false;
+        }
+
+        // 是否加载函数
+        function isloaded($img){
+            return $img.attr('src') === $img.attr('data-img');
+        }
+
+        // 加载图片
+        function loadImg($img){
+            $img.attr('src', $img.attr('data-img'));
+        }
+    </script>
+</body>
+</html>

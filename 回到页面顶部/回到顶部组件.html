@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>回到顶部组件</title>
+    <style>
+        div {
+            margin: 50px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+    <div>内容</div>
+
+    <script src='http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js'></script>
+
+    <script>
+        function GoTop(ct){
+            this.ct = ct || $("body");
+            this.target = this.createNode();
+            this.target.css({
+                position: 'fixed',
+                right: "10px",
+                bottom: "10px",
+                margin: '10px 20px',
+                border: '1px solid #ccc',
+                'font-size': '16px',
+                'text-align': 'right',
+                cursor: "pointer"
+            });
+        };
+
+        GoTop.prototype = {
+            bindEvent: function(){
+                var $target = this.target;
+                $target.on("click", function(){
+                    $(window).scrollTop(0);
+                });
+
+                $(window).on("scroll", function(){
+                    if($(this).scrollTop() > 100){
+                        $target.slideDown();
+                    }else{
+                        $target.slideUp();
+                    }
+                });
+
+                $target.on("mouseenter", function(){
+                    $(this).css({
+                        opacity: 0.6
+                    });        
+                });
+
+                $target.on("mouseleave", function(){
+                    $(this).css({
+                        opacity: 1
+                    });
+                });
+            },
+
+            createNode: function(){
+                var node = $("<button class=''>回到顶部</button>");
+                this.ct.append(node);
+                node.hide();
+                return node;
+            }
+        };
+
+        var v = new GoTop();
+        v.bindEvent();
+    </script>
+</body>
+</html>

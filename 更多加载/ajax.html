@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>加载更多</title>
+    <style>
+      body,
+      ul,
+      li,
+      a {
+          margin: 0;
+          padding: 0;
+      }
+
+      ul,
+      li {
+          list-style: none;
+      }
+        
+      a {
+          text-decoration: none;
+      }
+
+      #load-more {
+          display: block;
+          margin: 30px auto 0 auto;
+          text-align: center;
+          cursor: pointer;
+      }
+      
+      #ct li {
+          margin: 10px 20px;
+          padding: 10px;
+          background: #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+
+      .btn {
+          height: 40px;
+          line-height: 40px;
+          width: 160px;
+          background: orange;
+          border-radius: 4px;
+          color: #333;
+      }
+
+      .btn:hover {
+          background: #c78;
+          color: #000;
+      }
+
+
+    </style>
+</head>
+<body>
+    <ul id="ct">
+    </ul>
+    <a href="#" class="btn" id="load-more">
+      加载更多
+    </a>
+    
+    <!--<script>    
+        var btn = document.querySelector('#load-more');
+        var ct = document.querySelector('#ct');
+        var curIndex = 0;
+        var islocking = true;
+
+        btn.addEventListener('click', function(e){
+            e.preventDefault();
+            
+            if (!islocking) {
+                return;
+            }
+            
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 304) {
+                        var results = JSON.parse(xhr.responseText);
+                        var fragment = document.createDocumentFragment();
+                        for(var i = 0 ; i < results.length; i++) {
+                            var node = document.createElement('li');
+                            node.innerText = results[i];
+                            fragment.appendChild(node);
+                        }
+                        ct.appendChild(fragment);
+                        
+                        curIndex += 5;
+                        
+                    } else {
+                        alert('出错了');
+                    }
+                    islocking = true;
+                }
+            }
+            xhr.open('get', '/loadMore?index='+curIndex+'&length=5' ,true);
+            xhr.send();
+            islocking = false;
+        });
+
+        /*
+         1.get
+         2. /loadMore
+         3 {
+             index: 0
+             length: 5
+         }
+         4. ['内容０'，‘内容１’，‘内容２’，‘内容３’，‘内容４’]
+
+        */
+    </script>-->
+
+     
+    
+    <!--ajax　的封装-->
+    <script>
+        var btn = document.querySelector('#load-more');
+        var ct = document.querySelector('#ct');
+        var pageIndex = 0;
+        var islocking = true;
+        
+        // 绑定一个监听事件
+        btn.addEventListener('click', function(e){
+            e.preventDefault();　// 屏蔽ａ的默认事件
+            
+            if (!islocking) { return ; }
+
+            function loadData(callback) {
+                
+                ajax({
+                    type: 'get',
+                    url: '/loadMore',
+                    data: {
+                        index: pageIndex,
+                        length: 5
+                    },
+                    onSuccess: callback,
+                    onError: function () {
+                        console.log('error');
+                    }
+
+                });
+
+                function ajax (options) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function callback() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200 || xhr.status === 304 ) {
+                                var results = JSON.parse(xhr.responseText);
+                                renderPage(results);
+                                
+                            } else {
+                                options.onError;
+                            }
+                            islocking = true;
+                        };
+                    };   
+                    var query = "?";
+                    for(var key in options.data) {
+                        query = query + key + "=" + options.data[key] + "&";
+                    }
+                    query = query.substr(0, query.length-1);
+
+                    xhr.open(options.type, options.url + query, true);
+                    xhr.send();
+                    islocking = false;
+                };
+
+                function renderPage (news) {
+                    var fragment = document.createDocumentFragment();
+                    for (var i = 0 ; i < news.length ; i++) {
+                        var node = document.createElement('li');
+                        node.innerText = news[i]
+                        fragment.appendChild(node);
+                    }
+                    ct.appendChild(fragment);
+                    pageIndex += 5;
+                };
+            };
+
+            loadData();
+        });
+
+    </script>
+
+
+</body>
+</html>

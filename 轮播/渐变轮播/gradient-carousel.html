@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>渐变轮播(gradient-carousel)</title>
+    <style>
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .layout {
+            position: relative;
+            width: 850px;
+            height: 900px;
+            margin: 0 auto;
+        }
+
+        .carousel {
+            position: relative;
+            margin: 0 100px;
+            width: 650px;
+            height: 900px;
+            overflow: hidden; 
+        }
+
+        .carousel .img-ct {
+            /* position: absolute;  */
+            overflow: hidden;
+        }
+
+        .carousel .img-ct li {
+            float: left;
+        }
+
+        .carousel .img-ct img {
+            width: 650px;
+            height: 900px;
+        }
+        
+        .carousel .dots {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            font-size: 0;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .carousel .dots li {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin: 0 10px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+        } 
+
+        .carousel .dots li.active {
+            background-color: #ccc;
+        }  
+
+        .layout .btn .arrow {
+            position: absolute;
+            top: 50%;
+            margin-top: -100px;
+            display: inline-block;
+            width: 50px;
+            height: 200px;
+            border: 3px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 200px;
+            color: #ccc;
+            font-size: 40px;
+            text-decoration: none;
+            z-index: 999;
+        }
+
+        .layout .btn .arrow:hover {
+            background-color: #ccc;
+        }
+
+        .layout .btn a.arrow:hover {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .layout .btn .up {
+             left: 0px; 
+            
+        }
+
+        .layout .btn .down {
+            right: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="carousel">
+            <ul class="img-ct">
+                <li data=0><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-36042df1c72b6d7d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=1><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-69cd6e765a1b9988.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=2><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-41c28bfe7572d58d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=3><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-2ea3bbd72ae195dc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+            </ul>
+            <ul class="dots">
+                <li class='active'></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+        <div class="btn">
+            <a href="#" class='up arrow'>&lt;</a>
+            <a href="#" class='down arrow'>&gt;</a>
+        </div>    
+    </div>
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>  
+
+    <script>
+        var pageIndex = 0;  // 原始索引位置
+        var timer;   //定时器
+
+        var $imgCout = $('.carousel .img-ct li').length;   // 图片数量
+        var $imgContainer = $('.carousel .img-ct li'); // 单张图片容器
+
+        var $up = $('.layout .btn .up');   // 上一页节点
+        var $down = $('.layout .btn .down'); // 下一页节点
+        var $dotss = $('.carousel .dots>li'); // 圆点节点
+        var $dots = $('.carousel .dots'); // 圆点父元素节点
+        
+
+        var isScroll = false; // 锁（是不是滚动额时候）
+
+        // 在上一页绑定一个点击事件
+        $up.on('click',function(e){
+            e.preventDefault();  // 取消a元素的默认事件
+            playUp(1); 
+        });
+
+        // 在下一页绑定一个点击事件
+        $down.on('click', function(e){
+            e.preventDefault(); // 取消a元素的默认事件
+            playDown(1);
+        });
+
+        // 圆点上绑定一个点击事件
+        $dots.on('click','li', function(){
+            var index = $(this).index();
+            var len = index -pageIndex;
+            if(len > 0) {
+                playDown(len);
+            }else if(len < 0){
+                playUp(-len);
+            }
+            jump();
+        });
+
+        // 鼠标放置在图片上停止，拿开自动轮播
+        $('.img-ct li').on('mouseenter',function (){
+            clearInterval(timer);
+        })
+        $('.img-ct li').on('mouseleave',function (){
+            timer = setInterval(function(){playDown(1)}, 2000);
+        })
+
+        // 间隔2秒运行一次下一页的点击事件
+        timer = setInterval(function(){playDown(1)}, 2000);
+
+        // 上一页函数
+        function playUp(len) {
+            if(isScroll) {   // 锁防止重复点击
+                return;
+            }
+            isScroll = true;
+            pageIndex -= len;
+            if(pageIndex < 0) {  //如果到了-1这个位置时索引就转换到   3这个位置
+                pageIndex = ($imgCout - 1);
+            }
+            $imgContainer.hide();
+            $imgContainer.eq(pageIndex).fadeIn(1000);
+            isScroll = false;
+            jump();
+        };
+
+        // 下一页函数
+        function playDown(len) {
+            if(isScroll) {     // 锁防止重复点击
+                return;     
+            }
+            isScroll = true;  
+            pageIndex += len;
+            if(pageIndex === $imgCout) {
+                pageIndex = 0;
+            }
+            $imgContainer.hide();
+            $imgContainer.eq(pageIndex).fadeIn(1000);
+            isScroll = false;
+            jump();
+        }
+
+        // 圆点动画函数
+        function jump() {
+            $dotss.removeClass('active')  // 清除所有的active
+                 .eq(pageIndex)    // 页面对应索引
+                 .addClass('active');  // 添加active
+        };         
+    </script>
+</body>
+</html>

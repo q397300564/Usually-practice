@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图片瀑布流</title>
+    <style>
+        html,
+        body,
+        ul,
+        li {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px/1.5em '微软雅黑'，'黑体';
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .layout {
+            width: 1260px;
+            margin: 0 auto;
+        }
+
+        .waterfall{
+            position: relative;
+        }
+
+        .waterfall .item {
+            position: absolute;
+            width: 190px;
+            margin: 10px;
+            box-shadow: 0 4px 5px 0px rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(255, 255, 255, .19); 
+            transition: all 1s;
+            cursor:pointer;
+        }
+
+        .waterfall.hover .item:hover {
+            margin-top: -5px;
+        }
+
+        .item img{
+            width: 190px; 
+        }
+
+        .waterfall .item .header {
+            margin: 10px 0;
+            padding: 0 10px;
+            font-size: 16px;
+        }
+
+        .waterfall .item .textContent {
+            padding-top: 10px;
+            padding-right: 10px;
+            padding-left: 10px;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+            border-top: 1px solid rgba(255, 255, 255, .6);
+            background-color: #fafafa;
+        }
+
+
+        .hide {
+            display: none;
+        }
+
+        .loading {
+            /* visibility: hidden;    */
+            height: 60px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 60px;
+            background-color: #ccc;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="layout">
+         <ul class = "waterfall">
+            <!-- <li class = "item">
+                <a href="#" >
+                    <img src="http://n.sinaimg.cn/tech/transform/20170823/Z4RR-fykcypq4094302.jpg" alt="">
+                </a>
+                <h3 class="header"></h3>
+                <p class="text-content"></p>
+            </li> -->
+
+            <!--　用于计算 item 宽度和列数，但不展示出来  -->
+            <li class="item hide"></li>
+        </ul> 
+        <div class="loading">loading...</div>
+    </div>
+
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+
+    <script>
+
+        var $load = $('.loading'); // loading 节点
+        var isover = false;  // 判断是否结束(false还没有结束)
+        var isDataArrive = true;  //  判断数据是否传完（数据已经传输完了）
+        var clock; //延时器
+
+        var pageIndex = 0;  // 页的索引
+        var onePageCount = 20; //一页的数量 
+
+        var nodeWidth = $('.item').outerWidth(true);
+        console.log(nodeWidth);
+        var collength = parseInt($('.waterfall').width()/nodeWidth) // 页面一排几个
+        var colSumHeight = []; //创建存储 colSumHeight 对象的数组
+        
+        for(var i = 0; i < collength; i++){
+            colSumHeight[i] = 0;
+        };
+
+        checkData();
+
+        $(window).scroll(function(){
+            if(clock){
+                clearTimeout();
+            }
+            clock = setTimeout(function(){
+                checkData();
+            }, 1000);
+        });
+
+        function checkData(){
+            if(isVisible($load) && !isover && isDataArrive){
+                getData();
+            }
+        }
+
+        $(window).resize(function(){
+            waterfallPlace();
+        });        
+
+        function isVisible($load){
+            var scrollTop = $(window).scrollTop();  // 滑动高度
+            var windowHeight = $(window).height();  // 浏览器可视高度
+            var loadingOffset = $load.offset().top; // loading 位置高度
+            var loadHeight = $load.height();        // loading　元素高度
+
+            if(loadingOffset < scrollTop + windowHeight && loadingOffset + loadHeight> scrollTop) {
+                return true;
+            } 
+            return false;
+        }
+
+        function getData(){
+            if(!isDataArrive){
+                return;
+            }
+            $('.loading').removeAttr('visibility', 'hidden');
+            $.ajax({
+                url:'http://platform.sina.com.cn/slide/album_tech',
+                type:'get',
+                dataType: 'jsonp',
+                jsonp: 'jsoncallback',
+                data: {
+                    app_key: '1271687855',
+                    num: onePageCount,  // 数量
+                    page: pageIndex     // 索引
+                },
+                success: function onSuccess(ret){
+                    isDataArrive = true;
+                    $('.loading').attr('visibility', 'hidden');
+                    if(ret && ret.status && ret.status.code === '0') {  // 判断数据有没有 
+                        pageIndex++;
+                        appendHtml(ret.data); //如果数据没问题，那么生成节点并摆放好位置
+                        // console.log(ret.data+'1');
+                    }
+                },
+                error: function onError(){
+                    $('.loading').attr('visibility', 'hidden');
+                    alert('系统异常');
+                } 
+            });
+            isDataArrive = false;
+        }
+
+        function appendHtml(len){
+            // console.log(len+'2');
+            if(len.length === 0){
+                isover = true;
+                $('.loading').text('没有数据了');
+            }
+
+            // 遍历数据传去节点
+            $.each( len , function(index, item){
+                var $node = getNode(item);
+                $node.find('img').load(function(){
+                    $('.waterfall').append($node); 
+                    waterfallPlace($node);
+                });
+            });
+
+        };
+
+        function getNode(item){
+            var html = '';
+            html += '<li class="item">';
+            html += '<a href="'+ item.url +'">';
+            html += '<img src="'+ item.img_url +'" alt = "图片">';
+            html += '</a>';
+            html += '<h3 class="header">'+ item.short_name +'</h3>';
+            html += '<p class="textContent">'+ item.short_intro +'</p>';
+            html += '</li>';
+
+            return $(html);
+        }; 
+
+        function waterfallPlace($node) {
+            $node.each(function(){
+                var idx = 0;
+                var minSumHeight = colSumHeight[0];
+
+                // 判断最小值
+                for(var i = 0; i < colSumHeight.length; i++) {
+                    if(minSumHeight > colSumHeight[i]){
+                        idx = i;
+                        minSumHeight = colSumHeight[i];
+                    }
+                }
+
+                // 定位节点位置
+                $(this).css({
+                    top: minSumHeight,
+                    left: nodeWidth * idx
+                });
+
+                colSumHeight[idx] += $(this).outerHeight(true);
+
+                $('.waterfall').height(Math.max.apply(null, colSumHeight));
+            });
+        }
+
+        $('.waterfall').mouseenter('li',function(){
+            $(this).addClass('hover');
+        });
+
+        $('.waterfall').mouseleave('li',function(){
+            $(this).removeClass('hover');
+        });
+</script>
+</body>
+</html>

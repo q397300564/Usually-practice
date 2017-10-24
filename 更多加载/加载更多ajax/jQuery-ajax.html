@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>加载更多</title>
+    <style>
+      body,
+      ul,
+      li,
+      a {
+          margin: 0;
+          padding: 0;
+      }
+
+      ul,
+      li {
+          list-style: none;
+      }
+        
+      a {
+          text-decoration: none;
+      }
+
+      #load-more {
+          display: block;
+          margin: 30px auto 0 auto;
+          text-align: center;
+          cursor: pointer;
+      }
+      
+      #load-more img {
+          width: 40px;
+          height: 40px;
+      }
+
+      #ct li {
+          margin: 10px 20px;
+          padding: 10px;
+          background: #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+
+      .btn {
+          height: 40px;
+          line-height: 40px;
+          width: 160px;
+          background: orange;
+          border-radius: 4px;
+          color: #333;
+      }
+
+       #ct .hover {
+          background: #c78;
+          color: #000;
+      } 
+
+
+    </style>
+</head>
+<body>
+    <ul id="ct">
+        <li>内容１</li>
+        <li>内容２</li>
+        <li>内容３</li>
+        <li>内容４</li>
+        <li>内容５</li>
+    </ul>
+    <a href="#" class="btn" id="load-more">
+      加载更多
+    </a>
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+    <script>
+        //定义接口
+        /*
+        url: '/loadMore'
+        type: 'get'
+        dataType: 'json'
+        入参：data: {
+            index: 5
+            len: 5
+        }
+        回参：{
+            status: 1 正常状态 0 失败状态
+            data:{
+                status: 1
+                data: [新闻1，新闻2，新闻3，新闻4，新闻5]
+            }
+        }
+
+        */
+        $loadMore = $('#load-more');
+        $ct = $('#ct');
+
+        idx = 6;
+        
+        //鼠标放置上去和移除的样式， 这里由于 Li是动态添加的，所以必须要事件代理
+        $('#ct').on('mouseenter', 'li', function(){
+            $(this).addClass('hover');
+        });
+        $('#ct').on('mouseleave', 'li', function(){
+            $(this).removeClass('hover');
+        });
+
+        $loadMore.on('click',function(e){
+            e.preventDefault(); // 取消a的默认事件
+
+            if($(this).data('isloading')){
+                return;
+            };
+
+            $(this).data('isloading', true)           // 设置一个状态锁，防止数据加载回来之前用户多次点击
+                   .html("<img src = 'loading.gif'>");
+
+            $.ajax({
+                url: '/loadMore',
+                datatype: 'json',
+                type: 'get',
+                data: {
+                    index: idx,
+                    len: 5
+                },
+                success: function(json){
+                    onSuccess(json);
+                },
+                error: function(){
+                    onError();
+                }
+            });
+
+            function onSuccess(json){
+                $loadMore.data('isloading', false)
+                         .text('加载更多');
+                if(json.status === 1){
+                    append(json.data);
+                    idx += 5;
+                }else{
+                    alert('数据出错');
+                }
+            };
+
+            function onError(){
+                $loadMore.data('isLoading', false)
+                         .text('加载更多');            //链式调用，换行也没关系，对齐好看些
+                alert('系统异常');
+            }
+
+            function append(arr){
+                var html = '';
+                for(var i = 0; i < arr.length; i++){
+                    html += '<li>' + arr[i]+ '</li>';
+                };
+                $ct.append(html);
+            }
+        });
+    </script>
+</body>
+</html>

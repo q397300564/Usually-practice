@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>lazyLoad</title>
+    <link rel="stylesheet" href="iconfont/iconfont.css" type="text/css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px/1.5em '微软雅黑',Arial, Helvetica;
+        }
+
+        body,
+        ul,
+        li,
+        h2,
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #111;
+        }
+
+        .clearfix::after {
+            content:'';
+            display: block;
+            clear: both;
+        }
+
+        #layout {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-top: 30px;
+        }
+
+        .container {
+            padding: 14px 0;
+        }
+
+        .text {
+            position: relative;
+            max-width: 450px;
+            padding-right: 10px;
+            margin-right: 150px;
+            padding-left: 4px;
+        }
+
+        .text > a img {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translate(0,-50%);
+            width: 150px;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            /* box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.1), 0 5px 20px 0 rgba(0, 0, 0, 0.08); */
+        }
+
+        .info {
+            margin: 6px 0;
+            font-size: 12px;
+        }
+
+        .info a img{
+            width: 36px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+
+        .info a span {
+            margin-left: 6px;
+            color: #111;
+            font-weight: bold;   
+        }
+
+        .info > span {
+            margin-left: 6px;
+            color: #999;
+        }
+
+        .text-content {
+            padding-bottom: 10px;
+        }
+
+        .text-content h2 {
+            font-size: 20px;
+        }
+
+        .text-content p {
+            margin-top: 6px;
+            font-size: 12px;
+        }
+
+        .text-content h2:hover {
+            text-decoration: underline;
+        }
+        
+        .comment li {
+            float: left;
+            margin-right: 10px;
+            font-size: 12px;
+            line-height: 20px;
+            color: #999;
+        }
+
+        .comment li a {
+            color: #999;
+        }
+
+        .comment .icon {
+            padding: 0 10px;
+            border: 1px solid #e58b7c;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .comment .icon:hover {
+            background-color: rgba(255, 240, 243, 0.2);
+        }
+
+        .comment .icon a{
+            color: #e58b7c;
+        }
+
+        .comment li i,.comment li span {
+            vertical-align: middle;
+        }
+
+        .active {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .load-more{
+            visibility: hidden;
+            margin: 3px;
+            height: 3px;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="layout">
+        <ul class="container">
+            <!-- <li class="text">
+                <div class="info">
+                    <a href="#">
+                        <img src="https://upload.jianshu.io/users/upload_avatars/5439675/89454541-4331-417f-b90f-94e30dafde9d.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/240/h/240" alt="">
+                        <span>真实故事计划</span>
+                    </a>
+                    <span>10小时前</span>
+                </div>
+                <div class="text-content">
+                    <h2>慰安妇：我恨日本人，但更恨中国人！</h2>
+                    <p>日占时期，乡里有很多被日军玷污过的女人，她们历尽艰难活了下来。在经历了侵略者的凌辱后，同胞们又给她们补了一刀。 一 阿开婆婆死了，以前总是拎着篮子在校门口卖零食的老婆婆，消失...</p>
+                </div>
+                <ul class="comment clearfix">
+                    <li class = 'icon'><a href="#">历史</a></li>
+                    <li><a href="#"><i class="iconfont icon-chakan1"></i><span>5481</span></a></li>
+                    <li><a href="#"><i class="iconfont icon-COMMENT"></i><span>258</span></a></li>
+                    <li><i class="iconfont icon-like"></i><span>123</span></li>
+                    <li><i class="iconfont icon-money"></i><span>3</span></li>
+                </ul>
+                <a href="#"><img src="https://upload-images.jianshu.io/upload_images/5439675-95d9e9361d14edfc.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/375/h/300" alt=""></a>
+            </li>  -->
+        </ul>
+        <p class="load-more"></p>
+    </div>
+
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+    <script>
+        var idx = 0;  // 索引值
+        var isover = false;  // 锁（判断有没有结束）
+        var isNewsArrive = true;  // 锁（判断新闻是否到达）
+
+        // 获取新闻
+        getNews();
+
+        // 绑定一个滑动事件
+        $(window).on('scroll', checkNews);
+
+        // 查询新闻 （判断是否在可视范围之中，有没有）
+        function checkNews(){
+            if( isShow($('.load-more')) && !isover && isNewsArrive ){
+                getNews();　// 调用函数　发送请求获取新闻
+            }
+        };
+
+        // 判断是否在视野内的函数
+        function isShow($node){
+            var scrollTop = $(window).scrollTop();  //　滑动高度
+            var windowHeight = $(window).height();  //  窗口高度
+            var offsetTop = $node.offset().top  //  元素位置高度
+            var nodeHeight = $node.height();        // 元素高度
+            if ( offsetTop < windowHeight + scrollTop && offsetTop > scrollTop + nodeHeight ) { 
+                console.log("视野");
+                return true;
+                
+            }
+            return false;
+        }
+
+        /*
+            url: '/loadMore'
+            type: 'get',
+            data: {
+                index: idx,
+                len: 6
+            }
+            success: function(json){
+                onSuccess(json);
+            },
+            error: function(){
+                onError();
+            }
+
+            传回来的数据obj {
+                status: 1 正常　０出错
+                data: {
+                    info-img: 
+                    info-name:
+                    info-time:
+                    content-title: 
+                    content-p:
+                    comment-type:
+                    comment-lookup:
+                    comment-like:
+                    comment-money:
+                    comment-comments:
+                    text-img:
+                }
+            }
+        
+        */
+        // 发送请求获取新闻
+        function getNews(){
+            isNewsArrive = false;
+
+            $.ajax({
+                url: '/getNews',
+                type: 'get',
+                data: {
+                    index: idx,
+                },
+                success: function(ret){
+                    console.log(ret);
+                    onSuccess(ret);
+                    
+                },
+                error: function(){
+                    onError();
+                }
+            });
+        
+            function onSuccess(ret){
+                isNewsArrive = true;
+                
+                if(ret.status === 1){
+                    idx++;
+                    console.log(idx);
+                    appendHtml(ret.data);
+                    console.log(ret.data);
+                    checkNews();
+                }else{
+                    alert('获取新闻出错');
+                }
+                
+            };
+
+            function onError(){
+                alert('系统异常');
+            };
+        };
+
+        // 把数据拼装到ＨＴＭＬ上　在添加到到页面上
+        function appendHtml(news){
+            var htmls = '';
+            if( news.length === 0){
+                isover = true;
+                $('#layout').append('<p class="active">没有数据了</p>');
+                return;
+            }
+
+            $.each(news, function(){
+                htmls += '<li class="text">';
+                htmls += '<div class="info">';
+                htmls += '<a href="#">';
+                htmls += '<img src="' + this.infoImg + '" alt="">';
+                htmls += '<span>' + this.infoName + '</span>';
+                htmls += '</a>';
+                htmls += '<span>' + this.infoTime + '</span>';
+                htmls += '</div>';
+                htmls += '<div class="text-content">';
+                htmls += '<h2>' + this.contentTitle + '</h2>';
+                htmls += '<p>' + this.contentP + '</p>';
+                htmls += '</div>';
+                htmls += '<ul class="comment clearfix">';
+                htmls += "<li class = 'icon'>" + '<a href="#">' + this.commentType + '</a></li>';
+                htmls += '<li><a href="#">' + '<i class="iconfont icon-chakan1"></i><span>' + this.commentLookup + '</span></a></li>';
+                htmls += '<li><a href="#">' + '<i class="iconfont icon-COMMENT"></i><span>' + this.commentComments + '</span></a></li>';
+                htmls += '<li><i class="iconfont icon-like"></i><span>' + this.commentLike + '</span></li>';
+                htmls += '<li><i class="iconfont icon-money"></i><span>' + this.commentMoney + '</span></li>';
+                htmls += '</ul>';
+                htmls += '<a href="#"><img src="' + this.textImg + '" alt=""></a>';
+                htmls += '</li>'; 
+            });
+
+            $('.container').append(htmls);
+        };
+
+
+
+    </script>
+</body>
+</html>

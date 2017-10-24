@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>瀑布流</title>
+    <style>
+        .layout {
+            position: relative;
+        }
+
+        .item {
+            position: absolute;
+            width: 192px;
+            margin-top: 10px;
+            margin-right: 10px; 
+            transition: all 1s;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .1)
+        }
+
+        .h1 {
+            height: 200px;
+            background-color: orange;
+        }
+
+        .h2 {
+            height: 300px;
+            background-color: gray;
+        }
+
+        .h3 {
+            height: 400px;
+            background-color: cornflowerblue;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="item h3"></div>
+        <div class="item h2"></div>
+        <div class="item h2"></div>
+        <div class="item h1"></div>
+        <div class="item h3"></div>
+        <div class="item h1"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h1"></div>
+        <div class="item h1"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h2"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h2"></div>
+        <div class="item h2"></div>
+        <div class="item h1"></div>
+        <div class="item h3"></div>
+        <div class="item h1"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h1"></div>
+        <div class="item h1"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h2"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h2"></div>
+        <div class="item h2"></div>
+        <div class="item h1"></div>
+        <div class="item h3"></div>
+        <div class="item h1"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h1"></div>
+        <div class="item h1"></div>
+        <div class="item h2"></div>
+        <div class="item h3"></div>
+        <div class="item h2"></div>
+        <div class="item h2"></div>
+    </div>
+     <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+    <script>
+
+
+        waterfall();
+
+        $(window).resize(function(){
+            waterfall();
+        });
+
+        function waterfall(){
+            // 先要知道瀑布流文件在页面一排的数量
+            var $collength = parseInt($('.layout').width()/$('.item').width()); // 瀑布流在一排的数量
+            var itemArr = []; 
+            for(var i = 0; i < $collength; i++) {
+                itemArr[i] = 0;
+            }
+
+            // 循环遍历item
+            $('.item').each(function(){
+                var minValue = Math.min.apply(null, itemArr);  // 最小值
+                var minIndex = itemArr.indexOf(minValue); // 最小值的索引
+
+                $(this).css({
+                    top: itemArr[minIndex],
+                    left: $(this).outerWidth(true) * minIndex
+                });
+
+                itemArr[minIndex] += $(this).outerHeight(true);
+            });
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>img-懒加载</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        } 
+
+        body,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        a {
+            text-decoration: none;
+        }
+        
+        .layout {
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        .contents {
+            margin-left: -32px;
+        }
+
+        .contents li {
+            float: left;
+            margin-left: 26px;
+            padding-top: 10px;
+            width: 284px;
+            /* background: #ccc; */
+        }
+
+        .contents li img {
+            width: 284px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <ul class = "contents clearfix">
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/1.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/6.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/7.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/8.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/9.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/10.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/11.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/12.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/13.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/14.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/15.jpg" alt="图片">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://kejian.jirengu.com/data/fe/%E8%AF%BE%E4%BB%B6/32-%E6%87%92%E5%8A%A0%E8%BD%BD/code/blank.jpg" data-img="http://cdn.jirengu.com/book.jirengu.com/img/16.jpg" alt="图片">
+                </a>
+            </li>
+            
+        </ul>
+        <div id="hello">曝光</div>
+    </div>
+
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+   <script>
+       
+        // new Exposure($('#hello'), function($node){
+        //     $node.text($node.text() + $node.text());
+        // });
+
+        // $('.contents img').each(function(idx, img){
+        //     new Exposure($(img), function($node){
+        //         showImg($node);
+        //     });
+        // });
+
+        var lazy = (function(){
+            function Exposure($target, callback){
+                this.$target = $target;
+                this.callback = callback;
+                this.isLoad = false;
+                this.bind();
+            };
+
+            Exposure.prototype = {
+                bind: function(){
+                    var _this = this;
+                    var clock;
+                    $(window).on('scroll', function(){
+                        if(clock){
+                            clearTimeout(clcok);
+                        }
+                        clock = setTimeout(function(){
+                            _this.check();
+                        },300);
+                    });
+                },
+                check: function(){
+                    if(this.isLoad){
+                        return;
+                    };
+                    if(this.isShow(this.$target)){
+                        this.callback(this.$target);
+                    };
+                },
+                isShow: function($node){
+                    var scrollTop = $(window).scrollTop();
+                    var windowHeight = $(window).height();
+                    var nodeOffset = $node.offset().top;
+                    var nodeHeight = $node.height();
+                    if(nodeOffset < scrollTop + windowHeight && scrollTop < nodeOffset + nodeHeight){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                },
+
+                showImg: function($node){
+                    var src = $node.attr('data-img');
+                    $node.attr('src', src);
+                },
+
+                isLoad: function($node){
+                    return $node.attr('src') === $node.attr('data-img');
+                }
+            };
+            
+            return {
+                init: function($target , callback){ 
+                    $target.each(function(idx ,target){
+                        new Exposure($(target), callback);
+                    });
+                },
+                one: function($target, callback){
+                    $target.each(function(idx, target){
+                        new Exposure($(target), callback);
+                        this.isLoad = true;
+                    });
+                }
+                
+            }  
+        })()
+
+        lazy.init($('#hello'), function($node){
+                $node.text($node.text() + '123');
+        });
+
+        lazy.one($('.contents img'), function($node){
+            this.showImg($node); 
+        });
+    </script> 
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>瀑布流懒加载的获取数据</title>
+    <style>
+        html,
+        body,
+        div,
+        ul,
+        li,
+        p,
+        h3 {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px/1.5em '微软雅黑'，'黑体';
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        ul,
+        li,
+        h3,
+        p {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .layout {
+            max-width: 900px;
+            margin: 0 auto; 
+        }
+
+        .waterfall {
+            position: relative;
+        }
+
+        .waterfall .item {
+            position: absolute;
+            width: 280px;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #eee;
+            transition: all 1s;
+        }
+
+        .waterfall .item img {
+            width: 260px;
+        }
+
+        .waterfall .item .header {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .waterfall .item .textContent {
+            padding-top: 10px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #666;
+        }
+
+        .hide {
+            display: none;  
+        }
+
+        .loading {
+            visibility: hidden;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+         <ul class="waterfall">
+            <!-- <li class="item">
+                <a href="#" class="link" target="_black">
+                    <img src="http://n.sinaimg.cn/tech/transform/20170823/Z4RR-fykcypq4094302.jpg" alt="">
+                </a>
+                <h3 class="header">5亿年前原始蠕虫长刺捕食猎物</h3>
+                <p class="textContent">5亿多年前，一种海洋蠕虫在海洋深处游动，它们利用50个尖脊刺捕捉小型猎物。</p>
+            </li> -->
+
+            <!-- 用于计算 item 宽度和列数，但不展示出来-->
+            <li class="item hide"></li>
+        </ul> 
+        <div class="loading">
+            loading...
+        </div>
+    </div>
+
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+
+    <!-- <script>
+        // 获取数据
+        // 把数据变为DOM， 通过瀑布流的方式放到页面上
+        // 当滚动到底部的时候，继续获取数据
+        
+
+        /*[
+            {
+                url:'',
+                title:'',
+                p:'',
+            },
+            {
+                url:'',
+                title:'',
+                p:'',
+            }....
+
+        ]
+        */
+        var curPage = 1; //（页数）
+        var onePagePuantity = 10; //（一页数量）
+        var nodeArr = []; //节点数组的高度
+        var nodeWidth = $('.item').outerWidth(true); // 节点宽度
+        var collength = parseInt($('.waterfall').width()/nodeWidth); // 节点在页面一排的长度
+        for(var i = 0; i < collength; i++) {
+            nodeArr[i] = 0; 
+        };
+        
+        var isDataArrive = true;  // （可以加载数据）
+
+        start();
+
+        function start(){
+            getData(function(newsList){
+                console.log('newsList');
+                isDataArrive = true; //（可以加载数据）
+                // 便利数据，把数据放入节点
+                $.each(newsList, function(idx, news){
+                    var $node = getNode(news);  //获取节点
+                    $node.find('img').on('load', function(){  // 当图片加载完成时，执行
+                        $('.waterfall').append($node);  // 添加节点到页面
+                        console.log($node, 'loading...');
+                        waterfallPlace($node); // 执行懒加载
+                    });
+                });
+            });
+            isDataArrive = false; //（不可以加载数）
+        };
+        
+
+        // 绑定一个滑动事件(懒加载)
+        $(window).scroll(function(){
+            if(!isDataArrive){
+                    return;
+            }
+            if(isVisible('.loading')){
+                start();
+            }
+        });
+
+
+         // 是否在可视区
+        function isVisible($node){
+            var scrollTop = $(window).scrollTop(); // 滑动高度
+            var windowHeight = $(window).height();  // 窗口高度
+            var nodeHeight = $('.loading').offset().top;    // 节点位置高度
+
+            if(nodeHeight < windowHeight + scrollTop && nodeHeight > scrollTop) {
+                return true;
+            }else{
+                return false;
+            }
+        };
+
+        // 获取数据
+        function getData(callback){
+            $.ajax({
+                url: 'http://platform.sina.com.cn/slide/album_tech',
+                type: 'get',
+                dataType: 'jsonp',
+                jsonp: 'jsoncallback',
+                data: {
+                    app_key: '1271687855',
+                    num: 'onePagePuantity',
+                    page: 'curPage'
+			    },
+                success: function onSuccess(ret){
+                    if(ret && ret.status && ret.status.code === '0'){
+                        callback(ret.data); //如果数据没问题，那么生成节点并摆放好位置
+                        curPage++;
+                    }else {
+                        console.log('get data error');
+                    }
+                },
+                error: function onError(){
+                    console.log('系统异常');
+                }
+            });
+        }
+
+        // 获取节点
+        function getNode(item){
+            var html = '';
+            html += '<li class="item">';
+            html += '<a href="'+ item.url +'" class="link">';
+            html += '<img src="'+ item.img_url +'" alt="">';
+            html += '</a>';
+            html += '<h3 class="header">'+ item.short_name +'</h3>';
+            html += '<p class="textContent">'+ item.short_intro +'</p>';
+            html += '</li>';
+
+            return $(html);
+        };
+
+        // 瀑布流
+        function waterfallPlace($node){
+            var idx = 0;
+            var minSumHeight = nodeArr[0];
+
+            for(var i = 0; i < nodeArr.length; i++){
+                if(minSumHeight > nodeArr[i]){  // 判断最小数组中最小的高度
+                    idx = i;
+                    minSumHeight = nodeArr[i];
+                    console.log(minSumHeight+'```')
+                }
+            }
+
+            $node.css({
+                top: minSumHeight,
+                left: nodeWidth*idx
+            });
+
+            nodeArr[idx] += $node.outerHeight(true);
+            console.log($node);
+            console.log(nodeArr[idx]);
+
+            $('.waterfall').height(Math.max.apply(null, nodeArr));
+        };
+
+       
+    </script> -->
+
+    <script>
+        // 点击页面加载数据
+        // 滚动页面加载数据
+
+        //滚动加载 
+        var $load = $('.loading'); // loading... 节点位置
+        var isover = false; // （判断是否结束） false（没有）
+        var isDataArrive = true; // (判断数据是否到达状态) true(到达)
+        var clock; // 延时器
+
+        //ajax节点
+        var pageIndex = 0; // 页的索引
+        var onePageCount = 10; // 页的数量
+
+        // 用户第一次打开页面，还未滚动窗口的时候需要执行一次 checkShow
+        checkShow();  
+
+        // 查询数据
+        function checkShow(){
+            // 判断是否在页面显示区 且 是否没有数据了 且 数据时到达状态
+            if(isVisible($load) && !isover && isDataArrive) {
+                lazyRender();
+            };
+        };
+        
+        // 在window上绑定一个滚动事件来可是去加载内容
+        $(window).scroll(function(){
+            if(clock){
+                clearTimeout();
+            }
+            
+            clock = setTimeout(function(){
+                checkShow(); // 在执行懒加载过程
+            }, 300)  // 0.3秒在执行
+        
+        });
+
+        // 是否在可视区
+        function isVisible($node){
+            var scrollTop = $(window).scrollTop();  // 浏览器滑动高度
+            var windowHeight = $(window).width();   // 浏览器可视区高度
+            var loadOffsetHeight = $node.offset().top; //$load节点的位置高度
+
+            if(loadOffsetHeight < scrollTop + windowHeight && loadOffsetHeight > scrollTop){
+                return true;
+            }
+            return false;
+        };
+
+        //获取数据，并且摆放位置
+        function lazyRender(){
+            if(!isDataArrive){
+                return;
+            } 
+            $.ajax({
+                url: 'http://platform.sina.com.cn/slide/album_tech',
+                type: 'get',
+                dataType:'jsonp', //这里使用了新浪新闻的 jsonp 接口，大家可以直接看数据， 如： http://platform.sina.com.cn/slide/album_tech?jsoncallback=func&app_key=1271687855&num=3&page=4
+                jsonp: 'jsoncallback',
+                data: {
+                    app_key: '1271687855',
+                    num: onePageCount,
+                    page: pageIndex
+                },
+                success: function onSuccess(ret){
+                    isDataArrive = true;
+                    if(ret && ret.status && ret.status.code === '0') {  // 判断数据有没有 
+                        pageIndex++;
+                        appendHtml(ret.data); //如果数据没问题，那么生成节点并摆放好位置
+                        console.log(ret.data);
+                        // checkShow();
+                    }
+                },
+                error: function onError(){
+                    alert('系统异常');
+                }
+            });
+            isDataArrive = false;
+        };
+
+        // 拼装html
+        function appendHtml(len){
+            console.log(len);
+            if(len.length === 0){ //  判断数据没有了
+                isover = true; 
+                $('.layout').append('<p style="text-align: center; font-size: 20px; color: #333; font-weight: blod">没有数据了</p>');
+            }
+            // 遍历传回来的数据
+            $.each( len ,function(index , item){
+                var $node = getNode(item); // 获取节点
+                $node.find('img').load(function(){  // 当$node节点子元素的图片加载成功时，执行
+                    $('.waterfall').append($node);  // 把节点添加到页面上
+                    waterfall($node); // 执行瀑布流
+                });
+            });
+        }
+        
+        // 获取节点
+        function getNode(item){
+            var html = '';
+            html += '<li class="item">';
+            html += '<a href="'+ item.url +'" class="link" target="_black">';
+            html += '<img src="'+ item.img_url +'" alt="">';
+            html += '</a>';
+            html += '<h3 class="header">'+ item.short_name +'</h3>';
+            html += '<p class="textContent">'+ item.short_intro +'</p>';
+            html += '</li>';
+
+            return $(html);
+        }
+
+
+        //瀑布流
+
+        var nodeWidth = $('.item').outerWidth(true);  // 节点的宽度
+        var collength = parseInt($('.waterfall').width()/nodeWidth); // 一横排的数量
+        var colSumHeight = [];  // //创建存储 colSumHeight 对象的数组
+
+        for(var i = 0; i < collength; i++ ){
+            colSumHeight[i] = 0;
+        }
+        function waterfall($node){
+            $node.each(function(){
+                var idx = 0; // 最小值索引
+                var minSumHeight = colSumHeight[0]; // 最小值高度
+                // 判断最小值
+                for(var i = 0; i < colSumHeight.length; i++){
+                    if(minSumHeight > colSumHeight[i]){
+                        idx = i;
+                        minSumHeight = colSumHeight[i];
+                    };
+                };
+
+                $(this).css({
+                    top: minSumHeight,
+                    left: nodeWidth*idx,
+                    opacity: 1
+                });
+
+                colSumHeight[idx] += $(this).outerHeight(true);
+                // 撑起 .waterfall 节点的高度 因为用了绝对定位所以这个节点没高度 作用就是把 .waterfall 下面节点撑起啦
+                $('.waterfall').height(Math.max.apply(null, colSumHeight));
+
+            });
+        }
+    </script>
+</body>
+</html>

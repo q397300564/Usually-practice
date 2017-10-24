@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>轮播图</title>
+    <style>
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+
+        .layout {
+            position: relative;
+            width: 850px;
+            height: 900px;
+            margin: 0 auto;
+        }
+
+        .carousel {
+            position: relative;
+            margin: 0 100px;
+            width: 650px;
+            height: 900px;
+            overflow: hidden; 
+        }
+
+        .carousel .img-ct {
+            position: absolute; 
+            overflow: hidden;
+        }
+
+        .carousel .img-ct li {
+            float: left;
+        }
+
+        .carousel .img-ct img {
+            width: 650px;
+            height: 900px;
+        }
+        
+        .carousel .dots {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            font-size: 0;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .carousel .dots li {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin: 0 10px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+        } 
+
+        .carousel .dots li.active {
+            background-color: #ccc;
+        }  
+
+        .layout .btn .arrow {
+            position: absolute;
+            top: 50%;
+            margin-top: -100px;
+            display: inline-block;
+            width: 50px;
+            height: 200px;
+            border: 3px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 200px;
+            color: #ccc;
+            font-size: 40px;
+            text-decoration: none;
+            z-index: 999;
+        }
+
+        .layout .btn .arrow:hover {
+            background-color: #ccc;
+        }
+
+        .layout .btn a.arrow:hover {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .layout .btn .up {
+             left: 30px; 
+            
+        }
+
+        .layout .btn .down {
+            right: 30px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="carousel">
+            <ul class="img-ct">
+                <li data=0><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-36042df1c72b6d7d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=1><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-69cd6e765a1b9988.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=2><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-41c28bfe7572d58d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=3><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-2ea3bbd72ae195dc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+            </ul>
+            <ul class="dots">
+                <li class='active'></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <div class="btn">
+                <a href="#" class='up arrow'>&lt;</a>
+                <a href="#" class='down arrow'>&gt;</a>
+             </div> 
+        </div>  
+        <div style=" height: 20px;"></div>
+         <div class="carousel">
+            <ul class="img-ct">
+                <li data=0><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-36042df1c72b6d7d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=1><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-69cd6e765a1b9988.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=2><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-41c28bfe7572d58d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+                <li data=3><a href="#"><img src="http://upload-images.jianshu.io/upload_images/6101961-2ea3bbd72ae195dc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="轮播图"></a></li>
+            </ul>
+            <ul class="dots">
+                <li class='active'></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <div class="btn">
+                <a href="#" class='up arrow'>&lt;</a>
+                <a href="#" class='down arrow'>&gt;</a>
+             </div> 
+        </div>     
+    </div>
+    <script src = 'http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js'></script>
+    <script>
+        function Carousel($ct){
+            this.$ct = $ct;
+            this.init();
+            this.bind();
+        };
+
+        Carousel.prototype = {
+            init: function(){
+                var _this = this;
+                var $imgCt = this.$imgCt = this.$ct.find('.img-ct');  // 图片容量节点
+                var $imgs = this.$imgs = this.$ct.find('.img-ct > li'); //图片节点
+                var $up = this.$up = this.$ct.find('.btn .up'); // 上一页节点
+                var $down = this.$down = this.$ct.find('.btn .down'); //下一页节点
+                var $dotss = this.$dotss = this.$ct.find('.dots>li'); //圆圈节点
+
+                this.pageIndex = 0;  // 第一张
+                this.isScroll = false;  // 锁（判断是否滚动）
+                
+                this.quantity = this.$imgs.length;   // 数量
+                this.imgWidth = this.$imgs.width();  // 图片宽度
+                
+                //在图片的最前面克隆一张
+                $imgCt.append($imgs.first().clone());
+                //在图片的最后面克隆一张
+                $imgCt.prepend($imgs.last().clone());
+                //显示在没克隆的第一张
+                $imgCt.css({left: -this.imgWidth});
+                //容量宽度
+                $imgCt.width(this.imgWidth * (this.quantity + 2));
+
+                // // 间隔2秒运行一次下一页的点击事件
+                _this.timer = setInterval(function(){_this.playDown(1)}, 2000);
+            },
+
+            bind: function(){
+                var _this = this;
+                //在上一页节点绑定一个点击事件
+                this.$up.on('click',function(e){
+                    e.preventDefault();  // 取消 a 元素节点上的默认事件（避免它点击时置顶）
+                    _this.playUp(1);  // 上一页函数调用
+                });
+
+                // 在下一页节点绑定一个点击事件
+                this.$down.on('click',function(e){
+                    e.preventDefault();  // 取消 a 元素节点上的默认事件（避免它点击时置顶）
+                    _this.playDown(1); // 上一页函数调用
+                });
+
+                // 在跳转页面的圆点上绑定一个点击事件
+                this.$dotss.on('click', function(){
+                    var index = $(this).index();  // 点击圆点时的索引位置
+                    if(index < _this.pageIndex) {       // 判断 当 点击的索引位置 小于 当前图片位置时
+                        _this.playUp(_this.pageIndex - index);      // 调用 上一页函数 
+                    } else if(index > _this.pageIndex) {  // 判断 当 点击的索引位置 大于 当前图片位置时
+                        _this.playDown(index - _this.pageIndex);    // 调用 下一页函数
+                    }
+                });
+
+                // 鼠标放置在图片上停止，拿开自动轮播
+                this.$imgs.on('mouseover',function (){
+                    clearInterval(_this.timer);
+                })
+                this.$imgs.on('mouseout',function (){
+                    _this.timer = setInterval(function(){_this.playDown(1)}, 2000);
+                })
+            },
+
+            playUp: function(len){
+                var _this = this;
+                if(this.isScroll) {   // 锁 （页面还在滚动就不执行）
+                    return;
+                } 
+                this.isScroll = true; // 解锁（页面还在没有滚动就执行）
+
+                this.$imgCt.animate({  // $imgCt(图片容器)动画
+                    left: '+=' + len*this.imgWidth,  // 记得在$imgCt节点上设置绝对定位css属性   // 容器向左偏移距离（left宽度  （+向左）图片宽度×数量）   
+                }, function(){  // 当它偏移执行完以后执行
+                    _this.pageIndex -= len;  // 索引 = 索引-len
+                    if(_this.pageIndex === -1){  // 当 索引 小于0 或者 === -1 时
+                        _this.pageIndex = 3;  // 索引就回到3
+                        _this.$imgCt.css({left: -_this.imgWidth*_this.quantity}); // 图片容器位置
+                    }
+                    _this.isScroll = false; // 锁（页面还在滚动就不执行）
+                    _this.jump();  //跳转圆点图标函数
+                });
+            },
+
+            playDown: function(len){
+                var _this = this;
+                if(this.isScroll) {  // 锁 （页面还在滚动就不执行）
+                    return;
+                }
+                this.isScroll = true;  // 解锁（页面还在没有滚动就执行）
+                this.$imgCt.animate({
+                    left: '-=' + len*this.imgWidth  // 容器向右偏移距离（left宽度 （-向右）图片宽度×数量）
+                }, function(){  // 当它偏移执行完以后执行
+                    _this.pageIndex += len; // 索引 = 索引+len
+                    if(_this.pageIndex === _this.quantity) {  // 当索引全等于数量时
+                        _this.pageIndex = 0; //索引回到0；
+                        _this.$imgCt.css({left: - _this.imgWidth}); // 图片容器位置
+                    }
+                    _this.isScroll = false; // 锁 （页面还在滚动就不执行）
+                    _this.jump();   //跳转圆点图标函数
+                });
+            },
+
+            jump: function(){
+                this.$dotss.removeClass('active')  // 在圆点节点上 删除 所有的 active 的class
+                      .eq(this.pageIndex)    // 选中索引
+                      .addClass('active');  // 在索引所指的节点上添加 active 的class
+            }
+
+        };
+
+        var p1 = new Carousel($('.carousel').eq(0));
+        var p2 = new Carousel($('.carousel').eq(1));
+    </script>
+</body>
+</html>
