@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Tab 选项卡</title>
+
+	<script src="Tab选项卡.js"></script>
+</head>
+<body>
+	
+	<div id="box">
+		<div id="title" class="title">
+			<ul>
+				<li>
+					<a href="#"  class="select">点击</a>
+				</li>
+				<li>
+					<a href="#">点击</a>
+				</li>
+				<li>
+					<a href="#">点击</a>
+				</li>
+				<li>
+					<a href="#">点击</a>
+				</li>
+
+			</ul>
+		</div>
+
+		<div id="content">
+			<div class="cont" display="block">
+				<ul>
+					<li>
+						<a href="#">这是一段话1111</a>
+					</li>
+					<li>
+						<a href="#">这是一段话1111</a>
+					</li>
+					<li>
+						<a href="#">这是一段话1111</a>
+					</li>
+					<li>
+						<a href="#">这是一段话1111</a>
+					</li>
+				</ul>
+			</div>
+
+				<div class="cont" display="none">
+				<ul>
+					<li>
+						<a href="#">这是一段话22222</a>
+					</li>
+					<li>
+						<a href="#">这是一段话22222</a>
+					</li>
+					<li>
+						<a href="#">这是一段话22222</a>
+					</li>
+					<li>
+						<a href="#">这是一段话22222</a>
+					</li>
+				</ul>
+			</div>
+
+				<div class="cont" display="none">
+				<ul>
+					<li>
+						<a href="#">这是一段话33333</a>
+					</li>
+					<li>
+						<a href="#">这是一段话33333</a>
+					</li>
+					<li>
+						<a href="#">这是一段话33333</a>
+					</li>
+					<li>
+						<a href="#">这是一段话33333</a>
+					</li>
+				</ul>
+			</div>
+
+				<div class="cont" display="none">
+				<ul>
+					<li>
+						<a href="#">这是一段话4444</a>
+					</li>
+					<li>
+						<a href="#">这是一段话4444</a>
+					</li>
+					<li>
+						<a href="#">这是一段话4444</a>
+					</li>
+					<li>
+						<a href="#">这是一段话4444</a>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+
+	<style>
+		ul{
+			list-style: none;
+			margin: 0px;
+			padding: 0px;
+		}
+		li{
+			float: left;
+		}
+		#box{
+			width: 401px;
+			height: 152px;
+			border: 1px solid #333;
+			margin:50px auto;
+		}
+		.title{
+			width: 100%;
+			height: 50px;
+			line-height: 50px;
+			text-align: center;
+		}
+		.title ul{
+			overflow: hidden;
+			background: #ddd;
+		}
+		.title ul li{
+			width: 98px;
+			height: 50px;
+		}
+		.title ul li a.select{
+			background: #fff;
+			color: red;
+		}
+		.title ul li a{
+			display: inline-block;
+			width: 100%;
+			height: 100%;
+			text-decoration: none;
+			font-size: 16px;
+			font-weight: bold;
+			color: #000;
+		}
+		#content{
+			float: left;
+			width: 100%;
+			height: 102px;
+    overflow: hidden;
+		}
+		#content ul li{
+			width: 198px;
+			height: 50px;
+			line-height: 50px;
+			text-align: center;
+		}
+		#content ul li a{
+			text-decoration: none;
+			font-size: 16px;
+			color: #000;
+		}
+		#content .cont{
+			overflow: hidden;
+		}
+	</style>
+</body>
+</html>

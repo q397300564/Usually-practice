@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>表格排序</title>
+
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body {
+		    background-color: #fff;
+		    font-family: "Microsoft YaHei";
+		    height: 100%;
+		}
+		.content{
+			width: 60%;
+			margin: 5% auto;
+		}
+		table {
+	        margin-top: 25px;
+	        width: 100%;
+	        border-spacing: 0;
+	        border-collapse: collapse;
+	        background-color: transparent;
+	    }
+		#orderListTable tbody>tr {
+		    background: #fff;
+		    color: #000;
+		}
+		#orderListTable tr>td {
+		    text-align: center;
+		    border: 1px solid #000;
+		    padding: 8px;
+		    line-height: 1.42857143;
+		    vertical-align: top;
+		    max-width: 100px;
+		    word-wrap: break-word;
+		    word-break: break-all;
+		    vertical-align: middle;
+		}
+		#orderListTable thead tr:nth-child(1){
+		    cursor: pointer;
+		}
+
+		/* 红色箭头 */
+		.order-arrow-wrapper>span.arrow-active {
+		    color: #F71D1D
+		}
+	</style>
+</head>
+<body>
+
+	<div class="content">
+		<table id="orderListTable">
+		    <thead>
+		        <tr>
+		            <td>网点</td>
+		            <td>业务员数</td>
+		            <td>今日订单<span class="order-arrow-wrapper" objectKey="todayOrder"><span sortType="acs">↑</span>
+		                <span class="arrow-active" sortType="desc">↓</span></span>
+		            </td>
+		            <td>昨日订单<span class="order-arrow-wrapper" objectKey="yesterdayOrder"><span sortType="acs">↑</span>
+		                <span sortType="desc">↓</span></span>
+		            </td>
+		            <td>本月订单<span class="order-arrow-wrapper" objectKey="monthOrder"><span sortType="acs">↑</span>
+		                <span sortType="desc">↓</span></span>
+		            </td>
+		            <td>总订单数<span class="order-arrow-wrapper" objectKey="totalOrder"><span sortType="acs">↑</span>
+		                <span sortType="desc">↓</span></span>
+		            </td>
+		        </tr>
+		    </thead>
+		    <tbody>
+
+		    </tbody>
+		</table>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src='js/jquery.min.js'></script>
+<script type="text/javascript">
+
+	(function($){
+
+		// 获取表格数据
+		function getBranchesOrder(id){
+			var data = {
+				orgid:'8',
+				branchid:'0',
+				include:1
+			};
+			sendHttpRequest(data,'http://api.ubody.net/index/org/getBranchesOrderCount?skid=10003&sign=a3e7b8b5ea3e40d4e2d2a8aae7bcbcf3',renderBranchesStatistics)
+		}
+
+		// 请求成功后的回调函数
+		function renderBranchesStatistics(data){
+			var i = 0,
+			    html = '',
+			    len = data.length;
+			if (len === 0) {
+			    html += '<tr><td colspan="6">暂无数据</td></tr>';
+			    $('#orderListTable tbody').html(html);
+			    return;
+			} else {
+			    $.each(data, function (i, n) {
+			        html += '<tr>' +
+			            '<td>' + n.name + '</td>' +
+			            '<td>' + n.staffNum + '</td>' +
+			            '<td>' + n.todayOrder + '</td>' +
+			            '<td>' + n.yesterdayOrder + '</td>' +
+			            '<td>' + n.monthOrder + '</td>' +
+			            '<td>' + n.totalOrder + '</td>' +
+			            '</tr>'
+			    });
+			}
+			$('#orderListTable tbody').html(html);
+		}
+
+
+		/* 点击上下箭头-排序 */
+		$('.order-arrow-wrapper span').on('click', function () {
+		    $('.order-arrow-wrapper span').removeClass()
+		    $(this).addClass('arrow-active')
+		    sortByKeyTable(tableData, $(this).parent().attr("objectKey"), $(this).attr("sortType"))
+		    renderBranchesStatistics(tableData)
+		})
+
+		/*
+		 *封装http请求
+		 *@param object data 要发送的数据
+		 *@param string url 接口地址
+		 *@param function successCallback 请求成功后的回调函数
+		 */
+		function sendHttpRequest(data,url,successCallback){
+			$.ajax({
+			    type: "POST",
+			    url: url,
+			    data: data,
+			    dataType: 'json',
+			    success: function (data) {
+			        if (data.errcode === 1000 || data.errcode === 2008) {
+			            successCallback(data.data)
+			            if (successCallback === renderBranchesStatistics) {
+			                tableData = data.data
+			            }
+			        } else {
+			            if (data.errinfo) {
+			                toastr.error(data.errinfo)
+			            }
+			        }
+			    },
+			    error: function (data) {
+			        if (data.errinfo) {
+			            toastr.error(data.errinfo)
+			        }
+			    }
+			})
+		}
+
+		/*
+		 *数组对象排序
+		 *@param array  用户列表数据
+		 *@param string key 要排序的内容 如今日用户，昨日用户
+		 *@param type 升序还是降序
+		 */
+		function sortByKeyTable(array, key, type) {
+		    switch (type) {
+		    	// 升序
+		        case 'acs':
+		            array.sort(function (a, b) {
+		                var x = a[key],
+		                    y = b[key];
+		                return x - y
+		            })
+		            break;
+		        // 降序
+		        case 'desc':
+		            array.sort(function (a, b) {
+		                var x = a[key],
+		                    y = b[key];
+		                return y - x
+		            })
+		            break;
+		        default:
+		            break;
+		    }
+		}
+
+		getBranchesOrder();
+
+	})(jQuery)
+
+</script>
+
+
+
+<!--
+	<tbody><tr><td>兴宁区</td><td>19</td><td>0</td><td>0</td><td>0</td><td>91</td></tr><tr><td>部门11</td><td>1</td><td>0</td><td>0</td><td>0</td><td>64</td></tr><tr><td>南山南</td><td>2</td><td>0</td><td>0</td><td>0</td><td>22</td></tr><tr><td>竹溪社区卫生服务中心</td><td>1</td><td>0</td><td>0</td><td>0</td><td>19</td></tr><tr><td>西乡塘区</td><td>0</td><td>0</td><td>0</td><td>0</td><td>13</td></tr><tr><td>优云平台组</td><td>0</td><td>0</td><td>0</td><td>0</td><td>12</td></tr><tr><td>江南区</td><td>0</td><td>0</td><td>0</td><td>0</td><td>6</td></tr><tr><td>杭州立创生物科技有限公司</td><td>1</td><td>0</td><td>0</td><td>0</td><td>4</td></tr><tr><td>研发四部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>4</td></tr><tr><td>河南销售团队</td><td>1</td><td>0</td><td>0</td><td>0</td><td>3</td></tr><tr><td>深圳龙华区</td><td>0</td><td>0</td><td>0</td><td>0</td><td>3</td></tr><tr><td>良庆区</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr><tr><td>天空之城1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr><tr><td>test</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr><tr><td>南山一部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr><tr><td>青秀区</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr><tr><td>研发二部测试部门1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr><tr><td>邕宁区</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr><tr><td>新测试部门</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr><tr><td>研发</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>深圳部门</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>研发一部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>部门abcdef</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>新的部门</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>新的一个部门</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>研发三部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>研发一部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>研发部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>5.9“”测试的一个部门</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>测试部门新增显示保存成功</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>研发5部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>河北销售团队</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>新部门</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>测试likyhj</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>研发二部</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr></tbody>
+ -->

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>折叠菜单</title>
+	<script src='js/jquery.min.js'></script>
+
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body,html{
+			font-family: '微软雅黑';
+			background: #2D2C41;
+		}
+		a{
+			text-decoration: none;
+		}
+		ul{
+			list-style: none;
+		}
+		.box{
+			box-sizing: border-box;
+			width: 100%;
+			max-width: 360px;
+			margin: 100px auto;
+			border: 1px solid #666;
+			border-radius: 4px;
+		}
+		.box>.accordion>li{
+			background: #fff;
+			border-bottom: 1px solid #999;
+		}
+		.box>.accordion>li:last-child{
+			border-bottom: none;
+		}
+		.box>.accordion>li>div.link{
+			position: relative;
+			padding: 15px 40px;
+			font-weight: 700;
+			font-size: 14px;
+			cursor: pointer;
+			transition: all 0.4s ease;
+		}
+		.box>.accordion>li>div.link>i{
+			position: absolute;
+			top: 15px;
+			font-size: 18px;
+		    /*color: #595959;*/
+		   -webkit-transition: all 0.4s ease;
+			-o-transition: all 0.4s ease;
+			transition: all 0.4s ease;
+		}
+		.box>.accordion>li>div.link>i.phone{
+			left: 12px;
+		}
+		.box>.accordion>li>div.link>i.close{
+			right: 12px;
+			/*如果在这里有transform，那么动态添加的rotate类中此效果不会被覆盖，因为优先级不够*/
+			/*transform: rotate(90deg);*/
+		}
+
+		/* i标签css3旋转特效 */
+		.i-rotate{
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+
+		ul.submenu{
+			display: none;
+		    background: #444359;
+		    font-size: 14px;
+		    overflow: hidden;
+		}
+		ul.submenu>li{
+		    border-bottom: 1px solid #4b4a5e;
+		    -webkit-transition: all 0.4s ease;
+			-o-transition: all 0.4s ease;
+			transition: all 0.4s ease;
+		}
+		ul.submenu>li:last-child{
+		    border-bottom: none;
+		}
+		ul.submenu>li>a{
+			display: block;
+			padding: 10px;
+			color: #d9d9d9;
+			padding-left: 40px;
+		}
+	
+
+		.bg-red{
+			background-color: rgba(255,0,0,0.5);
+		}
+		.bg-green{
+			background-color: red;
+		}
+		.bg-blue{
+			background-color: red;
+		}
+		.font-red{
+			color: red;
+		}
+
+		.slide{
+			width: 400px;
+			color: #fff;
+			margin: 20px auto;
+		}
+		button{
+			display: block;
+			width: 100px;
+			margin:10px auto;
+		}
+	</style>
+</head>
+<body>
+	
+	<div class="box">
+		<ul class="accordion">
+			<li>
+				<div class="link">
+					<i class="phone">&sect;</i>
+					Web 前端
+					<i class="close">&gt;</i>
+				</div>
+				<ul class="submenu">
+					<li><a href="#">Photoshop</a></li>
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">Maquetacion web</a></li>
+				</ul>
+			</li>
+			<li>
+				<div class="link">
+					<i class="phone">&sect;</i>
+					Java
+					<i class="close">&gt;</i>
+				</div>
+				<ul class="submenu">
+					<li><a href="#">Photoshop</a></li>
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">Maquetacion web</a></li>
+				</ul>
+			</li>
+			<li>
+				<div class="link">
+					<i class="phone">&sect;</i>
+					PHP
+					<i class="close">&gt;</i>
+				</div>
+				<ul class="submenu">
+					<li><a href="#">Photoshop</a></li>
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">Maquetacion web</a></li>
+				</ul>
+			</li>
+			<li>
+				<div class="link">
+					<i class="phone">&sect;</i>
+					c++
+					<i class="close">&gt;</i>
+				</div>
+				<ul class="submenu">
+					<li><a href="#">Photoshop</a></li>
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">Maquetacion web</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+
+	<!-- slideToggle() -->
+	<button>slideToggle</button>
+	<div class="slide">
+		<p>
+			This is the paragraph to end all paragraphs. You should feel lucky to have seen such a paragraph in your life. Congratulations!
+			This is the paragraph to end all paragraphs. You should feel lucky to have seen such a paragraph in your life. Congratulations!
+		</p>
+	</div>
+
+</body>
+</html>
+
+
+<!-- 实现折叠菜单主要逻辑 -->
+<!-- 
+	知识点：
+	1、slideToggle() - 用滑动动画显示或隐藏一个匹配元素
+	例：
+	$('#clickme').click(function() {
+	 $('#book').slideToggle('slow', function() {
+	 // Animation complete.
+	 });
+	});
+	2、slideUp() - 用滑动动画隐藏一个匹配元素
+	3、slideDown() - 用滑动动画显示一个匹配元素
+
+ -->
+<script>
+	$(function(){
+		$('.accordion>li>.link').on('click',function(){
+			/* color */
+			$('.link').removeClass('font-red');
+			$('.link i').removeClass('font-red');
+			$(this).toggleClass('font-red');
+			$(this).find('i').toggleClass('font-red');
+
+			/* icon */
+			$(this).find('i.close').toggleClass('i-rotate');
+
+			/* menu */
+			$(this).parents().siblings().find($('.submenu')).slideUp();
+			$(this).next('.submenu').slideToggle();
+
+		})
+
+		$('.submenu li').hover(
+				function(){
+					$(this).toggleClass('bg-red'); 
+				}
+			);
+
+
+		/*slideToggle*/
+		$('button').on('click',function(){
+			$('.slide p').slideToggle('slow',function(){
+				
+			})
+		})
+	})
+</script>

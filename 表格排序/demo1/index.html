@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>表格排序</title>
+
+	<style>
+		table{
+			text-align: center;
+			margin:100px auto;	
+		}
+		table tr td{
+			background: #ddd;
+		}
+	</style>
+</head>
+<body>
+	<table border="1" width="400px" height='400px' cellpadding="0px" cellspacing="0">
+		<thead>
+			<tr>
+				<td onclick="getValue(0)">姓名</td>
+				<td onclick="getValue(1)">工资</td>
+				<td onclick="getValue(2)">年龄</td>
+				<td onclick="getValue(3)">性别</td>
+			</tr>
+		</thead>
+		<tr>
+			<td>赵六</td>
+			<td>2000</td>
+			<td>43</td>
+			<td>男</td>
+		</tr>
+		<tr>
+			<td>钱七</td>
+			<td>1000</td>
+			<td>11</td>
+			<td>男</td>
+		</tr>
+		<tr>
+			<td>王五</td>
+			<td>500</td>
+			<td>23</td>
+			<td>女</td>
+		</tr>
+		<tr>
+			<td>李四</td>
+			<td>6000</td>
+			<td>29</td>
+			<td>男</td>
+		</tr>
+		<tr>
+			<td>张三</td>
+			<td>2000</td>
+			<td>35</td>
+			<td>男</td>
+		</tr>
+	</table>
+</body>
+</html>
+
+<script>
+	var tbUP=true;//判定是正序还是倒序
+	//colValue为指定的列
+	function getValue(colValue){
+		var i,j,x,temp,temp1;//ijx为循环变量。temp,temp1用于冒泡置换
+		var arr=new Array();//存放单元格value的数组；
+		var arr1=new Array();//存放tr的数组
+
+		// 获取表格
+		var tb=document.getElementsByTagName("table");	
+		var tbody=tb[0].getElementsByTagName("tbody");
+		var tr=tbody[0].getElementsByTagName("tr");	
+
+		var trL=tr.length;//表格长度，在移除表格行的时候需要用到。
+
+		for(i=0;i<trL;i++){	
+			// 获取单元格的集合	
+			var td=tr[i].getElementsByTagName("td");	
+			//将单元格value存入数组			
+			arr.push(td[colValue].innerText);	
+			//将tr存入数组，此处使得两个数组的值相对应
+			arr1.push(tr[i]);
+
+		}
+		for(i=trL-1;i>0;i--){	
+			//移除每一行		
+			tbody[0].removeChild(tr[i]);		
+		}
+		//冒泡排序
+		if(tbUP==true){
+			//从大到小
+			for(j=0;j<arr.length;j++){
+				for(x=j+1;x<arr.length;x++){
+					if(arr[j]<arr[x]){
+						//利用冒泡排序对单元格value排序同时置换tr的顺序，实现最终效果。
+						temp   =arr[j];
+						arr[j] =arr[x];
+						arr[x] =temp;
+						//置换tr的顺序
+						temp1   =arr1[j];
+						arr1[j] =arr1[x];
+						arr1[x] =temp1;				
+					}	
+				}	
+				tbody[0].appendChild(arr1[j]);		
+			}
+			tbUP=false;
+		}else{
+			for(j=0;j<arr.length;j++){
+				for(x=j+1;x<arr.length;x++){
+					if(arr[j]>arr[x]){
+						temp   =arr[j];
+						arr[j] =arr[x];
+						arr[x] =temp;	
+						temp1   =arr1[j];
+						arr1[j] =arr1[x];
+						arr1[x] =temp1;							
+					}
+				}	
+				tbody[0].appendChild(arr1[j]);			
+			}
+			tbUP=true;
+		}	
+		//输入排序后的数组
+		console.log(arr)					
+	}
+	
+</script>
