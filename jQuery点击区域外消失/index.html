@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>点击一个连接显示层</title>
+<style type="text/css">
+#myDiv{
+	border:1px solid #000000;
+	width:200px;
+	height:100px;
+	background:#cccccc;
+}
+</style>
+<script language="JavaScript" type="text/javascript">
+
+	/* 添加事件通用方法 */
+	function addListener(element, e, fn) {
+	if (element.addEventListener) {
+			element.addEventListener(e, fn, false);//firefox使用addEventListener，来添加事件
+		} else {
+			element.attachEvent("on" + e, fn);//ie使用attachEvent，来添加事件
+		}
+	}
+
+	/* 给document绑定 click 事件 */
+	addListener(document, "click",function(evt) {
+		var evt = window.event ? window.event: evt,//event 兼容ie、火狐
+			target = evt.srcElement || evt.target;// Frrefox：event.target -- IE：evt.srcElement
+		if (target.id == "showDiv") {
+			document.getElementById("myDiv").style.display = "";
+			return;
+		} else {
+			//当它点击既不在div上又不在html上则是body，取他的父节点html
+			while (target.id != "myDiv" && target.nodeName.toLowerCase() != "html") {
+			target = target.parentNode;//target指向html
+		}
+			if (target.nodeName.toLowerCase() == "html") {
+				document.getElementById("myDiv").style.display = "none";
+		}
+	}
+})
+</script>
+</head>
+<body>
+
+<div>
+<div id="myDiv" style="display:none;">afjalsdjflaksdjflasjf</div>
+<input type="button" value="快来2121" id="showDiv" />
+</div>
+
+</body>
+</html>
