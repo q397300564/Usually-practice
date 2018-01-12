@@ -22,7 +22,7 @@
 	<!doctype html>
 	<html>
 	<head>
-		<meat charset="utf-8">
+		<meta charset="utf-8">
 		<title>罗丹的记录</title>
 	</head>
 	<body>
