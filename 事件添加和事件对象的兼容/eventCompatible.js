@@ -12,7 +12,7 @@ var eventCompatible = {
                 element['e' + type + handler](window.event);
             }
 
-            element.attachEvent( type , element[ type + handler]);
+            element.attachEvent( 'on' + type , element[ type + handler]);
             return true;
         }
         return false;
