@@ -38,7 +38,7 @@ var eventCompatible = {
 
     // 获取目标事件
     getTarget: function(e){
-        return e.target || e.scrElement;
+        return e.target || e.srcElement;
     }, 
 
     // 取消默认事件
