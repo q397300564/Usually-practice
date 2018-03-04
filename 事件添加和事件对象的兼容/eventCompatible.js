@@ -1,6 +1,6 @@
 var eventCompatible = {
     // 添加事件处理程序的方法
-    getEvent: function(element, type ,handler){
+    addEvent: function(element, type ,handler){
         if(!element){ return false };
         if(element.addEventListener){
             element.addEventListener( type, handler, false);
