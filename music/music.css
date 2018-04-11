@@ -1,0 +1,195 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    font-family: 微软雅黑, sans-serif;
+}
+
+ul,li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.wrapper {
+    width: 440px;
+    height: 500px;
+    margin: 0 auto;
+    background: #eef1f2;
+    position: relative;
+    top: 50%;
+    margin-top: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 7px #999;
+}
+
+/* 背景图 */
+.background {
+    width: 100%;
+    height: 270px;
+    position: relative;
+    background: #666 url(timg.jpg) no-repeat;
+    background-size: cover;
+}
+
+.lyric-box {
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+    background-color: rgba(100,100,100, 0.5);
+    box-sizing: border-box;
+    display: block;
+}
+
+.music-lyric {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+    overflow: hidden;
+}
+
+.music-lyric ul {
+    position: relative;
+    transition: all 1s;
+}
+
+.music-lyric ul li {
+    padding: 5px 0 2px 0;
+    position: relative;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    transition: all 1s;
+}
+
+.music-lyric ul li.active {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+/* 背景图 */
+
+/* 内容部分 */
+.content {
+    padding: 20px;
+}
+
+.content-b {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.music-massage {
+    width: 70%;
+    color: #455569;
+}
+
+.music-massage .music-name {
+    font-size: 26px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-massage .musicer {
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-massage .record {
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+.music-icon .h-icon {
+    display: inline-block;
+    padding-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #bbb;
+}
+
+.music-icon .icon-star-copy.hover {
+    color: orange;
+}
+
+.music-icon .icon-xihuan.hover {
+    color: red;
+}
+/* 内容部分 */
+
+/* 进度条 */
+
+.basebar {
+    display: block;
+    margin: 20px;
+    border: none;
+    width: 400px;
+    height: 4px;
+    background: #444444;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+}
+
+.progressbar {
+    display: block;
+    border: none;
+    height: 4px;
+    background: #ccc;
+    border-radius: 2px;
+    cursor: pointer;
+}
+/* 进度条 */
+
+/* 控制按钮 */
+
+.controls {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+.controls .f-l-icon {
+    font-size: 24px;
+    vertical-align: middle;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.controls .icon-play {
+    font-size: 28px;
+}
+
+.controls .f-r-icon {
+    padding-left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #bbb;
+}
+
+.controls .icon-xunhuan101.hover {
+    color: #333;
+}
+
+.controls .icon-caidan.hover {
+    color: #333;
+}
+
+
+/* 控制按钮 */
