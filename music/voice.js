@@ -2,7 +2,7 @@ function voice(node){
     this.$box = node;
     this.init();
     this._bind();
-    this.getvoice();
+    this.getVoice();
 }
 
 voice.prototype = {
@@ -25,11 +25,11 @@ voice.prototype = {
             let percentage = (X - targetLeft) / 80; //音量调大的长度
             
             _this.Audio.volume = _this.duration * percentage;
-            _this.getvoice();
+            _this.getVoice();
             
         });
     },
-    getvoice: function(){
+    getVoice: function(){
         let _this = this;
         let a = this.Audio.volume;
         let voiceWidth = a * this.$basebar.width() / this.duration ;

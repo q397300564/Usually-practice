@@ -196,7 +196,9 @@ a {
 .controls .icon-caidan.hover {
     color: #333;
 }
-
+.play-controls {
+    display: flex;
+}
 
 
 /* 控制按钮 */

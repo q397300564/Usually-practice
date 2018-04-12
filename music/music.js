@@ -31,8 +31,7 @@ app.prototype = {
 
         this.$icon_voice = this.$box.find('.lyric-music .voice'); // 声音
         this.$voiceWrap = this.$box.find('#voice'); // 声音调节
-        console.log(this.$icon_voice);
-        console.log(this.$voiceWrap);
+
         this.$icon_xh = this.$box.find('.lyric-music .icon-xunhuan101'); // 循环
         this.$icon_lyric = this.$box.find('.lyric-music .icon-caidan'); // 歌词
 
@@ -59,69 +58,69 @@ app.prototype = {
         });
         // 频道切换
         this.$rotating.on('click', function (e) {
-            if(_this.clock){
+            if (_this.clock) {
                 clearTimeout(_this.clock);
             }
-            
-            _this.clock = setTimeout(function(){
+
+            _this.clock = setTimeout(function () {
                 _this.getChannel();
-            },300);
-            
+            }, 300);
+
         });
         // 下一曲
         this.$next.on('click', function (e) {
-            if(_this.clock){
+            if (_this.clock) {
                 clearTimeout(_this.clock);
             }
-            
-            _this.clock = setTimeout(function(){
-                _this.getmusic();
-            },300);
-            
+
+            _this.clock = setTimeout(function () {
+                _this.getMusic();
+            }, 300);
+
         });
         // 进度条的控制
-        this.$basebar.on('mousedown', function(e){
+        this.$basebar.on('mousedown', function (e) {
             let X = e.clientX; // 鼠标位置
             let targetLeft = $(this).offset().left; // 获取元素当前坐标
-            console.log(targetLeft);
-            let percentage = ( X - targetLeft ) / 400; // 进度条的长度 按比例换算长度
-            console.log(percentage);
+            // console.log(targetLeft);
+            let percentage = (X - targetLeft) / 400; // 进度条的长度 按比例换算长度
+            // console.log(percentage);
             //  audio位置设置
             _this.Audio.currentTime = _this.Audio.duration * percentage;
 
-        }); 
+        });
         // icon 点击 动作
-            // 星星
-        this.$icon_xx.on('click', function(e){
+        // 星星
+        this.$icon_xx.on('click', function (e) {
             $(this).toggleClass('hover');
         });
-            // 喜欢
-        this.$icon_xi.on('click', function(e){
+        // 喜欢
+        this.$icon_xi.on('click', function (e) {
             $(this).toggleClass('hover');
         });
-            // 歌词
-        this.$icon_lyric.on('click', function(e){
+        // 歌词
+        this.$icon_lyric.on('click', function (e) {
             _this.$lyricWrap.toggle(0.1);
         });
-            // 单曲循环
-        this.$icon_xh.on('click', function(e){
+        // 单曲循环
+        this.$icon_xh.on('click', function (e) {
             $(this).toggleClass('hover');
-    
-            _this.Audio.onended = function(){
+
+            _this.Audio.onended = function () {
                 _this.Audio.load();
                 _this.Audio.play();
             }
-            
+
         });
         // 点击 声音
-        
-        this.$icon_voice.on('click', function(e){
-            console.log('1');
+
+        this.$icon_voice.on('click', function (e) {
+            // console.log('1');
             let Has = $(this).hasClass('icon-sey-voice-a');
-            if(Has){
+            if (Has) {
                 $(this).removeClass('icon-sey-voice-a').addClass('icon-sey-voice-b');
                 _this.$voiceWrap.show();
-            }else {
+            } else {
                 $(this).removeClass('icon-sey-voice-b').addClass('icon-sey-voice-a');
                 _this.$voiceWrap.hide();
             }
@@ -145,7 +144,10 @@ app.prototype = {
             dataType: 'json',
             Method: 'get',
             success: function (res) {
-                _this.channelHTML(res);
+                // console.log(JSON.stringify(res))
+                if (res) {
+                    _this.channelHTML(res);
+                }
             },
             error: function (err) {
                 console.log('获取信息失败');
@@ -165,11 +167,17 @@ app.prototype = {
         this.$record.attr('data-id', this.$channelId);
 
         // 获取歌曲
-        this.getmusic();
+        if (this.$record.attr('title') !== 'null') {
+            this.getMusic();
+        } else {
+            _this.getChannel();
+        }
+
     },
     // 获取音乐
-    getmusic: function (id) {
+    getMusic: function (id) {
         let _this = this;
+        console.log('1');
         $.ajax({
             url: Url.getSong,
             dataType: 'json',
@@ -178,7 +186,13 @@ app.prototype = {
                 'channel': this.$channelId
             },
             success: function (res) {
-                _this.musicHTML(res);
+                if (res.song[0].url !== '') {
+                    _this.musicHTML(res);
+                } else {
+                    console.log('跳过-----------')
+                    _this.getMusic();
+                }
+
             },
             error: function (err) {
                 console.log('获取音乐失败');
@@ -210,12 +224,16 @@ app.prototype = {
             'background-repeat': 'no-repeat',
             'background-size': 'cover'
         });
-
-        this._play(); // 播放
-        this.getlyric(); // 获取歌词
+        if (_title !== null) {
+            this._play(); // 播放
+            this.getLyric(); // 获取歌词
+        } else {
+            console.log('重新获取音乐----------')
+            _this.getMusic();
+        }
     },
     // 获取歌词
-    getlyric: function () {
+    getLyric: function () {
         let _this = this;
         let _sid = this.$myAudio.attr('sid'); // 获取audio节点上的id
         let _name = this.$musicName.text(); // 获取歌名
@@ -228,7 +246,12 @@ app.prototype = {
                 'name': _name
             },
             success: function (res) {
-                _this.lyricHTML(res);
+                if (res.name !== null) {
+                    _this.lyricHTML(res);
+                } else {
+                    console.log('jump===========')
+                    _this.getChannel();
+                }
 
             },
             error: function (err) {
@@ -243,7 +266,7 @@ app.prototype = {
         let _this = this;
         let lyr = data.lyric;
         let result = []; // 歌词存放处
-        lyr = lyr.replace('by 饥人谷',''); // 删除饥人谷
+        lyr = lyr.replace('by 饥人谷', ''); // 删除饥人谷
 
         if (!!lyr) {
             this.$musicLyric.find('ul').empty(); // 清空歌词信息
@@ -312,21 +335,25 @@ app.prototype = {
         let len = _Audio.currentTime / _Audio.duration * 100; //进行了多长    currentTime 是获取当前位置  duration 是返回音频长度
         // console.log(len);
         $progress.css({
-            width: len + '%'
+            'width': len + '%'
         });
         //自动下一曲
-        if (_Audio.currentTime == _Audio.duration) {
-            // 清空进度条
-            $progress.css({
-                width: 0
-            });
-            // 获取歌曲
-            app.getmusic();
-        }
+
+        // if (this.clock) {
+        //     clearTimeout(this.clock);
+        // }
+        this.clock = setTimeout(function () {
+            if (_Audio.currentTime === _Audio.duration) {
+                app.getMusic();
+                
+                clearTimeout(this.clock);
+            }
+        }, 500);
+
     }
 
 };
-
+// 声音大小
 new voice($('#voice'));
 var app = new app($('#app'));
 
