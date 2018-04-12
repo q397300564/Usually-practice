@@ -164,6 +164,12 @@ a {
     align-items: center; 
 }
 
+.controls .lyric-music {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .controls .f-l-icon {
     font-size: 24px;
     vertical-align: middle;
@@ -192,4 +198,57 @@ a {
 }
 
 
+
 /* 控制按钮 */
+
+/* 声音 */
+
+#voice  {
+    display: none;
+    position: relative;
+    width: 100px;
+    height: 22px;
+    background: #d99;
+    border-radius: 3px;
+    box-shadow: 0 3px 5px rgba(100,100,100, 0.2),0 1px 3px rgba(100,100,100, 0.18);
+    cursor: pointer;
+}
+
+#voice .basebar-wrap {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 6px;
+    background: #333;
+    border: none;
+}
+
+#voice .basebar-wrap .progressbar-wrap {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 6px;
+    background: #ccc;
+    border: none;
+}
+
+#voice .basebar-wrap .progressbar-wrap .dot {
+    display: block;
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #fff;
+    box-shadow: 0 3px 5px rgba(100,100,100, 0.2),0 1px 3px rgba(100,100,100, 0.18);
+}
+
+
+/* 声音 */

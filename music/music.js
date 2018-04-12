@@ -29,6 +29,10 @@ app.prototype = {
         this.$icon_xx = this.$box.find('.music-icon .icon-star-copy'); //星星
         this.$icon_xi = this.$box.find('.music-icon .icon-xihuan'); // 喜欢
 
+        this.$icon_voice = this.$box.find('.lyric-music .voice'); // 声音
+        this.$voiceWrap = this.$box.find('#voice'); // 声音调节
+        console.log(this.$icon_voice);
+        console.log(this.$voiceWrap);
         this.$icon_xh = this.$box.find('.lyric-music .icon-xunhuan101'); // 循环
         this.$icon_lyric = this.$box.find('.lyric-music .icon-caidan'); // 歌词
 
@@ -36,6 +40,8 @@ app.prototype = {
         this.$channelName; // 频道名字
         this.$channelId; // 频道id
         this.$lyricArr; // 歌词数组
+
+        this.clock; // 防止重复点击
 
     },
     _bind: function () {
@@ -53,11 +59,25 @@ app.prototype = {
         });
         // 频道切换
         this.$rotating.on('click', function (e) {
-            _this.getChannel();
+            if(_this.clock){
+                clearTimeout(_this.clock);
+            }
+            
+            _this.clock = setTimeout(function(){
+                _this.getChannel();
+            },300);
+            
         });
         // 下一曲
         this.$next.on('click', function (e) {
-            _this.getmusic();
+            if(_this.clock){
+                clearTimeout(_this.clock);
+            }
+            
+            _this.clock = setTimeout(function(){
+                _this.getmusic();
+            },300);
+            
         });
         // 进度条的控制
         this.$basebar.on('mousedown', function(e){
@@ -93,6 +113,19 @@ app.prototype = {
             }
             
         });
+        // 点击 声音
+        
+        this.$icon_voice.on('click', function(e){
+            console.log('1');
+            let Has = $(this).hasClass('icon-sey-voice-a');
+            if(Has){
+                $(this).removeClass('icon-sey-voice-a').addClass('icon-sey-voice-b');
+                _this.$voiceWrap.show();
+            }else {
+                $(this).removeClass('icon-sey-voice-b').addClass('icon-sey-voice-a');
+                _this.$voiceWrap.hide();
+            }
+        });
     },
     _play: function () {
         let _this = this;
@@ -108,7 +141,7 @@ app.prototype = {
     getChannel: function () {
         let _this = this;
         $.ajax({
-            url: 'http://api.jirengu.com/fm/getChannels.php',
+            url: Url.getChannel,
             dataType: 'json',
             Method: 'get',
             success: function (res) {
@@ -138,7 +171,7 @@ app.prototype = {
     getmusic: function (id) {
         let _this = this;
         $.ajax({
-            url: 'http://api.jirengu.com/fm/getSong.php',
+            url: Url.getSong,
             dataType: 'json',
             Method: 'get',
             data: {
@@ -187,7 +220,7 @@ app.prototype = {
         let _sid = this.$myAudio.attr('sid'); // 获取audio节点上的id
         let _name = this.$musicName.text(); // 获取歌名
         $.ajax({
-            url: 'http://api.jirengu.com/fm/getLyric.php',
+            url: Url.getLyric,
             dataType: 'json',
             Method: 'POST',
             data: {
@@ -210,6 +243,8 @@ app.prototype = {
         let _this = this;
         let lyr = data.lyric;
         let result = []; // 歌词存放处
+        lyr = lyr.replace('by 饥人谷',''); // 删除饥人谷
+
         if (!!lyr) {
             this.$musicLyric.find('ul').empty(); // 清空歌词信息
             let line = lyr.split('\n'); // 歌词以空格为界分割成一个数组
@@ -292,4 +327,6 @@ app.prototype = {
 
 };
 
+new voice($('#voice'));
 var app = new app($('#app'));
+

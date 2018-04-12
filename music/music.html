@@ -8,8 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="music.css">
     <link rel="icon" href="musicicon.jpg">
-    <link rel="stylesheet" href="http://at.alicdn.com/t/font_622889_e45zin73t3issjor.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_622889_e6zov6le0zyyzaor.css">
     <script src="jquery-1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script src="urls.js" type="text/javascript"></script>
     <title>Music-Random</title>
 </head>
 
@@ -34,7 +35,8 @@
                 </div>
                 <!-- 分享、收藏、喜欢按钮 -->
                 <div class="music-icon">
-                    <a class="iconfont icon-fenxiang h-icon" href="http://service.weibo.com/share/share.php?title=#_loginLayer_1466697157538" target="_black"></a>
+                    <a class="iconfont icon-fenxiang h-icon" href="http://service.weibo.com/share/share.php?title=#_loginLayer_1466697157538"
+                        target="_black"></a>
                     <span class="iconfont icon-star-copy h-icon"></span>
                     <span class="iconfont icon-xihuan h-icon"></span>
                 </div>
@@ -54,11 +56,21 @@
             </div>
             <!-- 循环播放，随机播放 -->
             <div class="lyric-music">
+                <div id="voice" class="voice-wrap">
+                    <span class="basebar-wrap">
+                        <span class="progressbar-wrap">
+                            <span class="dot"></span>
+                        </span>
+                    </span>
+                </div>
+                <span class="iconfont icon-sey-voice-a f-r-icon voice">
+                </span>
                 <span class="iconfont icon-xunhuan101 f-r-icon" title="循环播放"></span>
                 <span class="iconfont icon-caidan f-r-icon" title="歌词"></span>
             </div>
         </div>
     </div>
+    <script src="voice.js" type="text/javascript"></script>
     <script src="music.js" type="text/javascript"></script>
 </body>
 
