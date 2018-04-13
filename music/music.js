@@ -32,8 +32,8 @@ app.prototype = {
         this.$icon_voice = this.$box.find('.lyric-music .voice'); // 声音
         this.$voiceWrap = this.$box.find('#voice'); // 声音调节
 
-        this.$icon_xh = this.$box.find('.lyric-music .icon-xunhuan101'); // 循环
-        this.$icon_lyric = this.$box.find('.lyric-music .icon-caidan'); // 歌词
+        this.$icon_xh = this.$box.find('.lyric-music .icon-xunhuanbofang'); // 循环
+        this.$icon_lyric = this.$box.find('.lyric-music .icon-mingcijieshi'); // 歌词
 
         this.$channels; //频道数据
         this.$channelName; // 频道名字
@@ -91,7 +91,8 @@ app.prototype = {
         });
         // 歌词
         this.$icon_lyric.on('click', function (e) {
-            _this.$lyricWrap.toggle(0.1);
+            _this.$lyricWrap.toggle();
+            $(this).toggleClass('hover')
         });
         // 单曲循环
         this.$icon_xh.on('click', function (e) {
