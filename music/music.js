@@ -40,7 +40,9 @@ app.prototype = {
         this.$channelId; // 频道id
         this.$lyricArr; // 歌词数组
 
-        this.clock; // 防止重复点击
+        this._duration;
+        
+
 
     },
     _bind: function () {
@@ -76,17 +78,6 @@ app.prototype = {
             _this.clock = setTimeout(function () {
                 _this.getMusic();
             }, 300);
-
-        });
-        // 进度条的控制
-        this.$basebar.on('mousedown', function (e) {
-            let X = e.clientX; // 鼠标位置
-            let targetLeft = $(this).offset().left; // 获取元素当前坐标
-            // console.log(targetLeft);
-            let percentage = (X - targetLeft) / 400; // 进度条的长度 按比例换算长度
-            // console.log(percentage);
-            //  audio位置设置
-            _this.Audio.currentTime = _this.Audio.duration * percentage;
 
         });
         // icon 点击 动作
@@ -125,6 +116,12 @@ app.prototype = {
                 _this.$voiceWrap.hide();
             }
         });
+
+        //自动下一曲
+        this.Audio.onended = function(){
+            _this.getMusic();
+        } 
+        
     },
     _play: function () {
         let _this = this;
@@ -177,7 +174,7 @@ app.prototype = {
     // 获取音乐
     getMusic: function (id) {
         let _this = this;
-        console.log('1');
+
         $.ajax({
             url: Url.getSong,
             dataType: 'json',
@@ -186,16 +183,19 @@ app.prototype = {
                 'channel': this.$channelId
             },
             success: function (res) {
-                if (res.song[0].url !== '') {
+                if (res.song[0].url !== '' && res.song[0].lyr !== '') {
                     _this.musicHTML(res);
+
                 } else {
-                    console.log('跳过-----------')
+                    console.log('获取音乐失败跳过 重新获取-----------')
                     _this.getMusic();
+
                 }
 
             },
             error: function (err) {
                 console.log('获取音乐失败');
+
             }
         });
     },
@@ -209,6 +209,8 @@ app.prototype = {
         let _artist = _song.artist;
         let _url = _song.url;
         let _lrc = _song.lrc;
+
+        let clearPresent; // 清除进度条
 
         this.$myAudio.attr('src', _url);
         this.$myAudio.attr('sid', _sid);
@@ -224,12 +226,16 @@ app.prototype = {
             'background-repeat': 'no-repeat',
             'background-size': 'cover'
         });
-        if (_title !== null) {
+        if (_title !== null && _lrc !== '') {
+          
             this._play(); // 播放
+            new Present($('.basebar')); //进度条
             this.getLyric(); // 获取歌词
+            
+           
         } else {
-            console.log('重新获取音乐----------')
-            _this.getMusic();
+            console.log(' 获取到来音乐, 但是内容空，需要重新获取音乐----------')
+            this.getMusic();
         }
     },
     // 获取歌词
@@ -256,7 +262,7 @@ app.prototype = {
             },
             error: function (err) {
                 console.log('获取歌词失败');
-                setInterval(_this.present, 500); // 进度条
+                // setInterval(_this.present, 500); // 进度条
             }
 
         });
@@ -301,12 +307,17 @@ app.prototype = {
     // 渲染歌词
     renderLyric: function (data) {
         let lyric = '';
+        let clearPresent;  //　清除进度条循环
+        let clearLyric; // 清除歌词循环
         for (let i = 0; i < data.length; i++) {
             lyric += "<li data-time='" + data[i][0] + "'>" + data[i][1] + "</li>";
         }
         this.$musicLyric.find('ul').append(lyric);
-        setInterval(this.showLyric, 300); // 如何展示歌词
-        setInterval(this.present, 500); // 进度条
+        if( Math.floor(this.Audio.currentTime) === Math.floor(this.Audio.duration)){
+            clearInterval(clearLyric);
+        }
+        clearLyric = setInterval(this.showLyric, 300); // 如何展示歌词
+        
     },
     // 展示歌词
     showLyric: function () {
@@ -327,33 +338,15 @@ app.prototype = {
                 $lyricbox.css('top', -pH * (i - 4));
             }
         }
-    },
-    // 进度条
-    present: function () {
-        let $progress = $('.progressbar');
-        let _Audio = $('#app .content audio')[0]; // jquery节点要转换成 DOM 节点
-        let len = _Audio.currentTime / _Audio.duration * 100; //进行了多长    currentTime 是获取当前位置  duration 是返回音频长度
-        // console.log(len);
-        $progress.css({
-            'width': len + '%'
-        });
-        //自动下一曲
-
-        // if (this.clock) {
-        //     clearTimeout(this.clock);
-        // }
-        this.clock = setTimeout(function () {
-            if (_Audio.currentTime === _Audio.duration) {
-                app.getMusic();
-                
-                clearTimeout(this.clock);
-            }
-        }, 500);
-
     }
-
 };
+
 // 声音大小
 new voice($('#voice'));
-var app = new app($('#app'));
+const App = new app($('#app'));
+
+
+
+
+
 

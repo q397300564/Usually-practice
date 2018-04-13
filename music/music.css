@@ -133,9 +133,21 @@ a {
 
 /* 进度条 */
 
+.progressTime {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.progressTime .styleTime {
+    font-size: 12px;
+    color: #333;
+}
+
 .basebar {
     display: block;
-    margin: 20px;
+    margin: 5px 20px 20px 20px;
     border: none;
     width: 400px;
     height: 4px;

@@ -34,7 +34,7 @@ voice.prototype = {
         let a = this.Audio.volume;
         let voiceWidth = a * this.$basebar.width() / this.duration ;
         let scale = voiceWidth / this.$basebar.width() * 100;
-        console.log(voiceWidth);
+        // console.log(voiceWidth);
         
         this.$progressbar.css({
             'width': scale + '%'
