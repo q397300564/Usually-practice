@@ -26,7 +26,7 @@ Present.prototype = {
 
             _this.startTime(this.currentTime);
 
-            _this.endTime(this.duration - this.currentTime);
+            _this.endTime(this.duration);
 
         }); // 当目前的播放位置已更改时触发。 获取到 currentTime
         
