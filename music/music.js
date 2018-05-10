@@ -92,7 +92,7 @@ app.prototype = {
         // 歌词
         this.$icon_lyric.on('click', function (e) {
             _this.$lyricWrap.toggle();
-            $(this).toggleClass('hover')
+            $(this).toggleClass('hover');
         });
         // 单曲循环
         this.$icon_xh.on('click', function (e) {

@@ -1,0 +1,255 @@
+html,body {
+    height: 100%;
+}
+
+body {
+    position: relative;
+}
+
+ #main {
+    background: #eee;
+}
+
+#main>section {
+    box-sizing: border-box;
+    padding: 0 10px;
+    height: calc(100vh - 3.125rem);
+    overflow: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: auto;   /* ios 增加弹性 */
+    display: none;
+} 
+
+#main>section.active {
+    display: block;
+}
+
+/* movie-item */
+.ct .movie-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.loadings {
+    text-align: center;
+}
+
+.loadings > span {
+    font-size: 1rem;
+    display: inline-block;
+    animation: 1s rotate infinite linear;  /* 执行时间为1s， 执行的东西为 rotate， 执行多少次 无限循环， 速度是怎么的 匀速*/
+}
+
+@keyframes rotate {
+    0%  { transform: rotate(0deg)}
+    100% { transform: rotate(360deg)}
+}
+
+.ct .movie-item .movie-item-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.ct .movie-item-wrap .movie-img img{
+    width: 5.625rem;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.ct .movie-item-wrap .movie-info{
+    margin-left: 10px;
+    flex: 1;
+    overflow: hidden;
+}
+.ct .movie-item-wrap .movie-info>h2 {
+    color: #333;
+    font-size: 18px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ct .movie-item-wrap .movie-info>h3 {
+    color: #666;
+    font-size: 12px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ct .movie-item-wrap .movie-info>div {
+    color: #bbb;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.ct .movie-item-wrap .movie-info .movie-info-grade {
+    color: orange;
+}
+/* movie-item */
+
+/* beimei movie-header */
+
+.beimei-header {
+    padding: 10px 0;
+    margin: 10px 0;
+    background: #fff;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.beimei-header>h3 {
+    font-size: 1.125rem;
+}
+
+.beimei-header>h4 {
+    font-size: 0.875rem;
+    color: #999;
+}
+
+/* beimei movie-header */
+
+
+/* search */
+.search-header {
+    padding: 10px 0;
+    margin: 10px 0;
+    background: #42d1be;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.search-header .input-wrap {
+    display: flex;
+    align-items: center;
+
+    margin: 0 auto;
+    width: 80%;
+    padding: 3px 10px;
+    background: #fff;
+    border-radius: 0.9375rem;
+    font-size: 0.875rem;
+}
+
+.search-header .input-wrap>span {
+    color:#999;
+}
+
+.search-header .input-wrap>input{
+    padding-left: 5px;
+    border: none;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* search */
+
+/* 导航栏 */
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 3.125rem;
+    background:#42d1be;
+
+    display: flex;
+    color: #fff;
+}
+#footer .active {
+    color: #ddd;
+}
+
+#footer > div {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+}
+
+#footer .wrap-tab {
+    padding: 0.375rem;
+}
+
+#footer .wrap-tab>span {
+    display: block;
+    line-height: 1.2;
+}
+
+/* 导航栏 */
+
+
+/* datalist css */
+
+.goods::-webkit-input-placeholder {
+    color: rgb(213, 213,213);
+    font-size: 14px;
+}
+
+.goods:-moz-input-placeholder {
+    color: rgb(213, 213,213);
+    font-size: 0.875rem;
+}
+
+.goods::-moz-input-placeholder {
+    color: rgb(213, 213,213);
+    font-size: 0.875rem;
+}
+
+.goods:-ms-input-placeholder {
+    color: rgb(213, 213,213);
+    font-size: 0.875rem;
+}
+
+.input-wrap {
+    position: relative;
+    padding: 0.125rem;
+    max-width: 17.5rem;
+    height: 1.25rem;
+    background: rgb(202, 14, 14);
+}
+
+.goods {
+    display: block;
+    padding-left: 5px;
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 0.875rem;
+}
+
+.listData {
+    box-sizing: border-box;
+    position: absolute;
+    top: 2.25rem;
+    left: 0.625rem;
+    width: 17.5rem;
+    border: 1px solid #42d1be;
+    background: #fff;
+    border-top: none;
+    display: none;
+    z-index: 99;
+}
+
+.listData > a {
+    display: block;
+    font-size: 0.75rem;
+    height: 1.25rem;
+    width: 100%;
+    line-height: 1.25rem;
+    text-indent: 0.3125rem;
+    color: #666;
+}
+
+.listData > a.hover {
+    background-color: #42d1be;
+    color: #fff;
+}
+
+/* datalist css */
